@@ -1,0 +1,52 @@
+name: pages
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Generate Schemas
+        run: cargo run -p xtask -- schema
+      - name: Schema Guard
+        run: cargo run -p xtask -- schema-guard
+      - name: Conformance
+        run: cargo run -p xtask -- conformance
+      - name: Roundtrip
+        run: cargo run -p xtask -- roundtrip
+      - name: Report
+        run: cargo run -p xtask -- report
+      - name: Badge
+        run: cargo run -p xtask -- badge
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p public
+          cp -r schemas/*.json public/
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

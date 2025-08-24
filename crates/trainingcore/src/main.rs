@@ -1,1 +1,1 @@
-fn main() { println!("trainingcore boot ok"); }
+fn main() { println!("trainingcore stub"); }

@@ -1,2 +1,9 @@
+[sources]
+allow-git = false
+
+[bans]
+multiple-versions = "warn"
+
 [licenses]
-allow = ["Apache-2.0", "MIT", "BSD-3-Clause", "BSD-2-Clause"]
+unlicensed = "deny"
+allow = [ "MIT", "Apache-2.0", "BSD-3-Clause", "Unicode-3.0" ]

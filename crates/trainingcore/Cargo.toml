@@ -1,11 +1,9 @@
 [package]
 name = "trainingcore"
-version.workspace = true
-edition.workspace = true
-publish = false
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
-burn.workspace = true
-serde.workspace = true
-tracing.workspace = true
+anyhow = { workspace = true }
 bytecore = { path = "../bytecore" }

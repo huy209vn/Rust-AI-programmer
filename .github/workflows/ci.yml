@@ -1,20 +1,57 @@
-name: CI
+name: ci
 on:
   push:
+    paths-ignore:
+      - 'playground/**'
   pull_request:
+    paths-ignore:
+      - 'playground/**'
+
 jobs:
-  ci:
-    runs-on: ubuntu-latest
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      - name: fmt
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+      - name: Format
         run: cargo fmt --all -- --check
-      - name: clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
-      - name: build
-        run: cargo build --workspace --all-features
-      - name: tests
-        run: cargo test --workspace --all-features -- --nocapture
+        shell: bash
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+        shell: bash
+      - name: Test
+        run: cargo test --all --all-features
+        shell: bash
+      - name: Generate Schemas
+        run: cargo run -p xtask -- schema
+        shell: bash
+      - name: Schema Guard
+        run: cargo run -p xtask -- schema-guard
+        shell: bash
+      - name: Conformance (schema drift)
+        run: cargo run -p xtask -- conformance
+        shell: bash
+      - name: Roundtrip (JSON Schema validation)
+        run: cargo run -p xtask -- roundtrip
+        shell: bash
+      - name: Validate sample trace (Phase 0 rules)
+        run: cargo run -p xtask -- validate crates/traceserver/examples/sample_trace.jsonl
+        shell: bash
+      - name: Build Conformance Report
+        run: cargo run -p xtask -- report
+        shell: bash
+      - name: Build Shields badge
+        run: cargo run -p xtask -- badge
+        shell: bash
+      - name: Cargo Deny
+        uses: EmbarkStudios/cargo-deny-action@v2
+      - name: Cargo Audit (ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions-rs/audit-check@v1

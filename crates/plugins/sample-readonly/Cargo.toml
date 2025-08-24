@@ -1,9 +1,8 @@
 [package]
-name = "plugins-sample-readonly"
-version.workspace = true
-edition.workspace = true
-publish = false
+name = "plugin-sample-readonly"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
-anyhow.workspace = true
-protocol = { path = "../../protocol" }
+anyhow = { workspace = true }

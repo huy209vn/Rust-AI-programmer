@@ -1,3 +1,1 @@
-//! tool-ra
-
-pub fn ping() -> &'static str { "ok" }
+#[derive(Debug)] pub struct TypeOf { pub ty_string: String }

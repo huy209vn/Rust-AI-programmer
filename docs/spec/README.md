@@ -1,1 +1,1 @@
-# Spec v1.3 + Appendices v1.4 (frozen reference – copy here if desired)
+Phase-0 specs (Protocol v1, Trace v1, Patch v1, Memory v1).

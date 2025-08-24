@@ -1,0 +1,13 @@
+name: Bug Report
+about: Report a bug in Rust-AI-programmer
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Describe the bug and steps to reproduce
+  - type: input
+    attributes:
+      label: Version/commit
+  - type: textarea
+    attributes:
+      label: Logs/trace

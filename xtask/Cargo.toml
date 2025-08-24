@@ -1,0 +1,15 @@
+[package]
+name = "xtask"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+schemars = { workspace = true }
+jsonschema = "0.17"
+protocol = { path = "../crates/protocol" }
+traceserver = { path = "../crates/traceserver" }

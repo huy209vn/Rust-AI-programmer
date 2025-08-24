@@ -1,17 +1,11 @@
 [package]
 name = "memory"
-version.workspace = true
-edition.workspace = true
-publish = false
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
-serde.workspace = true
-serde_json.workspace = true
-rusqlite.workspace = true
-redb.workspace = true
-protocol = { path = "../protocol" }
-
-[features]
-sqlite = ["rusqlite"]
-redb = ["redb"]
-default = ["sqlite"]
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+sha2 = { workspace = true }

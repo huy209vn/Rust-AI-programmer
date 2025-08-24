@@ -1,29 +1,45 @@
 [workspace]
-members = [
-    "xtask",
-    "crates/*",
-    "crates/plugins/*",
-]
 resolver = "2"
+members = [
+  "xtask",
+  "crates/policy",
+  "crates/protocol",
+  "crates/traceserver",
+  "crates/orchestrator",
+  "crates/bytecore",
+  "crates/trainingcore",
+  "crates/tool-cargo",
+  "crates/tool-ra",
+  "crates/indexer",
+  "crates/patch-engine",
+  "crates/memory",
+  "crates/eval-harness",
+  "crates/gui",
+  "crates/plugins/sample-readonly",
+]
 
 [workspace.package]
 edition = "2024"
-version = "0.1.0"
 license = "MIT OR Apache-2.0"
-authors = ["Huy <you@example.com>"]
+rust-version = "1.80.0"
+repository = "https://github.com/huy209vn/Rust-AI-programmer"
+homepage = "https://huy209vn.github.io/Rust-AI-programmer/"
+documentation = "https://huy209vn.github.io/Rust-AI-programmer/"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
 
 [workspace.dependencies]
 anyhow = "1"
 thiserror = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+schemars = "0.8"
+chrono = { version = "0.4", features = ["serde"] }
+regex = "1"
+sha2 = "0.10"
+clap = { version = "4", features = ["derive"] }
 tracing = "0.1"
-tracing-subscriber = "0.3"
-tokio = { version = "1.47", features = ["rt-multi-thread", "macros"] }
-# Use a stable 0.7 line to avoid the yanked 0.8.2 as of 2025-08
+tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
 axum = "0.7"
-# Model stack
-burn = "0.18"
-# Storage backends
-rusqlite = { version = "0.37", default-features = false, features = ["bundled"] }
-redb = "2.6"
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }

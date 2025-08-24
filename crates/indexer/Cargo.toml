@@ -1,9 +1,8 @@
 [package]
 name = "indexer"
-version.workspace = true
-edition.workspace = true
-publish = false
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
-serde.workspace = true
-protocol = { path = "../protocol" }
+serde = { workspace = true, features = ["derive"] }

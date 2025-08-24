@@ -1,1 +1,1 @@
-fn main() { println!("eval-harness boot ok"); }
+fn main(){ println!("eval-harness stub"); }

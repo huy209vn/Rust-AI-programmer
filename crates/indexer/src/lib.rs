@@ -1,3 +1,1 @@
-//! indexer
-
-pub fn ping() -> &'static str { "ok" }
+#[derive(Debug, Clone)] pub struct GraphDelta(pub String);

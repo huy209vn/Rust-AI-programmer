@@ -1,7 +1,9 @@
 /target
 /.idea
 /.vscode
-**/*.swp
-**/*.swo
-**/.DS_Store
-/cargo-dist
+**/*.rs.bk
+node_modules/
+schemas/*.json
+/public
+.editorconfig
+.gitattributes

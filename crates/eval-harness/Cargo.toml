@@ -1,12 +1,8 @@
 [package]
 name = "eval-harness"
-version.workspace = true
-edition.workspace = true
-publish = false
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
 
 [dependencies]
-anyhow.workspace = true
-serde.workspace = true
-protocol.workspace = false
-protocol = { path = "../protocol" }
-tracing.workspace = true
+anyhow = { workspace = true }

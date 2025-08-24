@@ -1,3 +1,1 @@
-//! plugins/sample-readonly
-
-pub fn ping() -> &'static str { "ok" }
+pub fn hello() -> &'static str { "plugin-sample-readonly" }
