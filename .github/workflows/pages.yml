@@ -36,7 +36,7 @@ jobs:
           mkdir -p public
           cp -r schemas/*.json public/
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: public
 
