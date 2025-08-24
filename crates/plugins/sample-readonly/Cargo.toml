@@ -1,9 +1,9 @@
 [package]
-name = "bytecore"
+name = "plugins-sample-readonly"
 version.workspace = true
 edition.workspace = true
 publish = false
 
 [dependencies]
 anyhow.workspace = true
-burn.workspace = true
+protocol = { path = "../../protocol" }

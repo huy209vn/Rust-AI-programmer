@@ -1,15 +1,9 @@
 [package]
-name = "ai-rust-programmer-protocol"
-version = "0.1.0"
-edition = "2021"
-license = "Apache-2.0"
-
-[lib]
-path = "src/lib.rs"
+name = "protocol"
+version.workspace = true
+edition.workspace = true
+publish = false
 
 [dependencies]
-anyhow = { workspace = true }
-thiserror = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
-tracing = { workspace = true }
+serde.workspace = true
+serde_json.workspace = true

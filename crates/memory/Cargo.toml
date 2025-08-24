@@ -1,15 +1,17 @@
 [package]
-name = "ai-rust-programmer-memory"
-version = "0.1.0"
-edition = "2021"
-license = "Apache-2.0"
-
-[lib]
-path = "src/lib.rs"
+name = "memory"
+version.workspace = true
+edition.workspace = true
+publish = false
 
 [dependencies]
-anyhow = { workspace = true }
-thiserror = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
-tracing = { workspace = true }
+serde.workspace = true
+serde_json.workspace = true
+rusqlite.workspace = true
+redb.workspace = true
+protocol = { path = "../protocol" }
+
+[features]
+sqlite = ["rusqlite"]
+redb = ["redb"]
+default = ["sqlite"]

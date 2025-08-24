@@ -1,9 +1,9 @@
 [package]
-name = "indexer"
+name = "tool-ra"
 version.workspace = true
 edition.workspace = true
 publish = false
 
 [dependencies]
-serde.workspace = true
+anyhow.workspace = true
 protocol = { path = "../protocol" }

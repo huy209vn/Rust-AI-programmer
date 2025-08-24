@@ -1,3 +1,3 @@
-//! memory — placeholder crate per Spec.
+//! memory
 
-pub fn ping() -> &'static str { "memory:ok" }
+pub fn ping() -> &'static str { "ok" }

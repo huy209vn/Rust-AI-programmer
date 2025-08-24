@@ -1,0 +1,14 @@
+[package]
+name = "traceserver"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+tokio.workspace = true
+axum.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+protocol = { path = "../protocol" }
+policy = { path = "../policy" }

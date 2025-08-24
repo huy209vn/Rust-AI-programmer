@@ -1,9 +1,11 @@
 [package]
-name = "indexer"
+name = "trainingcore"
 version.workspace = true
 edition.workspace = true
 publish = false
 
 [dependencies]
+burn.workspace = true
 serde.workspace = true
-protocol = { path = "../protocol" }
+tracing.workspace = true
+bytecore = { path = "../bytecore" }

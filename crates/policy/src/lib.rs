@@ -1,3 +1,3 @@
-//! policy — placeholder crate per Spec.
+//! policy
 
-pub fn ping() -> &'static str { "policy:ok" }
+pub fn ping() -> &'static str { "ok" }

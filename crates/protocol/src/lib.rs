@@ -1,3 +1,3 @@
-//! protocol — placeholder crate per Spec.
+//! protocol
 
-pub fn ping() -> &'static str { "protocol:ok" }
+pub fn ping() -> &'static str { "ok" }

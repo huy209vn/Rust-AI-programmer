@@ -1,9 +1,8 @@
 [package]
-name = "indexer"
+name = "xtask"
 version.workspace = true
 edition.workspace = true
 publish = false
 
 [dependencies]
-serde.workspace = true
-protocol = { path = "../protocol" }
+anyhow.workspace = true

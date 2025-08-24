@@ -1,3 +1,3 @@
-//! bytecore — placeholder crate per Spec.
+//! bytecore
 
-pub fn ping() -> &'static str { "bytecore:ok" }
+pub fn ping() -> &'static str { "ok" }

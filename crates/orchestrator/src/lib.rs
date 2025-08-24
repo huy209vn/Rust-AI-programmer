@@ -1,3 +1,3 @@
-//! orchestrator — placeholder crate per Spec.
+//! orchestrator
 
-pub fn ping() -> &'static str { "orchestrator:ok" }
+pub fn ping() -> &'static str { "ok" }
