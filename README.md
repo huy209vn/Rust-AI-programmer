@@ -1,8 +1,5 @@
-# AI Rust Programmer — Phase 0
-
-![phase-0](https://img.shields.io/endpoint?url=https://huy209vn.github.io/Rust-AI-programmer/badge.json)
-
-Contracts & Policy with conformance tooling (Protocol v1, Trace v1, Patch v1, Memory Bundle v1, Policy crate).
+# AI Rust Programmer 
+WIP
 
 **Repo**: https://github.com/huy209vn/Rust-AI-programmer
 
