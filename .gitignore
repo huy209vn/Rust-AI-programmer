@@ -1,9 +1,10 @@
 /target
 /.idea
 /.vscode
-**/*.rs.bk
-node_modules/
-schemas/*.json
-/public
-.editorconfig
-.gitattributes
+**/*.swp
+/.cargo/.registry
+/.cargo/.git
+datasets/shards/*
+!.gitkeep
+dist/
+*.log

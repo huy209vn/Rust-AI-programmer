@@ -1,2 +1,0 @@
-warns = ["clippy::pedantic"]
-msrv = "1.80.0"

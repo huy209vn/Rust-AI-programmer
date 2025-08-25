@@ -1,0 +1,8 @@
+name: rust-std-1.80-docs
+version: "1"
+license: Apache-2.0
+source_url: https://doc.rust-lang.org/std/
+commit: null
+sha256: "<fill-after-snapshot>"
+split: doc
+notes: "Snapshot via xtask data:snapshot. Anchors reference the local sha256."

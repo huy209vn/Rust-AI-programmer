@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DevLog Entry",
+  "description": "Plan\u2192Probe\u2192Decide\u2192Patch episode log suitable for training ingestion.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "id": {
+      "type": "string"
+    },
+    "snapshot": {
+      "type": "object"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "action_block.schema.json"
+      }
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "$ref": "docspan.schema.json"
+      }
+    },
+    "final_state": {
+      "type": "object"
+    },
+    "metrics": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "snapshot",
+    "steps"
+  ]
+}

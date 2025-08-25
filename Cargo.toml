@@ -1,45 +1,30 @@
 [workspace]
-resolver = "2"
 members = [
+  "crates/rusta-common"
+  "crates/rusta-conductor"
+  "crates/rusta-tools"
+  "crates/rusta-graph"
+  "crates/rusta-devlog"
+  "crates/rusta-model"
+  "crates/rusta-datasets"
+  "crates/rusta-eval"
+  "crates/rusta-ui",
   "xtask",
-  "crates/policy",
-  "crates/protocol",
-  "crates/traceserver",
-  "crates/orchestrator",
-  "crates/bytecore",
-  "crates/trainingcore",
-  "crates/tool-cargo",
-  "crates/tool-ra",
-  "crates/indexer",
-  "crates/patch-engine",
-  "crates/memory",
-  "crates/eval-harness",
-  "crates/gui",
-  "crates/plugins/sample-readonly",
 ]
+resolver = "2"
 
 [workspace.package]
 edition = "2024"
 license = "MIT OR Apache-2.0"
-rust-version = "1.80.0"
-repository = "https://github.com/huy209vn/Rust-AI-programmer"
-homepage = "https://huy209vn.github.io/Rust-AI-programmer/"
-documentation = "https://huy209vn.github.io/Rust-AI-programmer/"
-
-[workspace.lints.rust]
-unsafe_code = "forbid"
+authors = ["Huy <you@example.com>"]
 
 [workspace.dependencies]
-anyhow = "1"
-thiserror = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-schemars = "0.8"
-chrono = { version = "0.4", features = ["serde"] }
-regex = "1"
-sha2 = "0.10"
-clap = { version = "4", features = ["derive"] }
-tracing = "0.1"
-tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
-axum = "0.7"
-tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+thiserror = "1"
+anyhow = "1"
+time = "0.3"
+uuid = { version = "1", features = ["v4"] }
+
+[workspace.lints.rust]
+warnings = "deny"
