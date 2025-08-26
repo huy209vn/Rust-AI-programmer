@@ -14,6 +14,8 @@ Memory fidelity — holds repo-specific style, avoids repeating past mistakes.
 
 Voice emergence — reflections and explanations feel consistent, not scripted.
 
+Grounded explanations (skill) — able to cite docs/code when useful, but not mandatory.
+
 1) Data Spine (reproducible, lawful, signed)
 1.1 Provenance Ledger
 

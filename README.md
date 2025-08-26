@@ -28,7 +28,7 @@ Local-first — she runs on your machine, under your control.
 
 Learns with you — every failure and success shapes her habits and voice over time.
 
-Uses the same tools you do — cargo, rust-analyzer, tests — as natural instruments of her craft, not as restrictions.
+Skilled engineer habits — she can cite docs when needed, and she uses cargo/RA/tests naturally.
 
 4. Soul trajectory
 

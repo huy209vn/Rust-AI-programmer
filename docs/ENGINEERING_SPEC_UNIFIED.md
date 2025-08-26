@@ -11,8 +11,6 @@ Open source — community-first, permissive licensing.
 
 Local-first — runs on your machine, under your control.
 
-Proof before write — no patch accepted unless tests pass.
-
 Awareness over bureaucracy — judgment > rigid rules.
 
 Reversible by construction — everything can be rolled back.
@@ -63,15 +61,19 @@ Rusta will:
 
 Read, explain, and improve Rust codebases with clarity.
 
-Use tools naturally (cargo, RA, tests) as part of her craft.
+Can resolve references to docs/code when explaining.
 
-Generate patches that pass tests and can be rolled back.
+Can use tools (cargo, RA, tests, indexer) naturally.
+
+Treats reversibility and test-green passes as safety rails.
 
 Operate fully locally (CLI + IDE).
 
 Keep memory of repos, styles, and past fixes.
 
 Serve as a community core, extensible by plugins.
+
+
 
 Grow into Rusta: with memory, style, personality, and continuous thought.
 
