@@ -196,7 +196,7 @@ impl Detector {
                         tag = tag.param("conf", "0.99");
                     }
                     return DetectOut {
-                        modality: Modality::vision,
+                        modality: Modality::Vision,
                         tag,
                     };
                 }
@@ -241,19 +241,19 @@ impl Detector {
 
         // 2) MAGIC-BYTES (visions)
         if is_png(sniff) {
-            return detect_hit(Modality::vision, "png", 0.95, bf);
+            return detect_hit(Modality::Vision, "png", 0.95, bf);
         }
         if is_jpeg(sniff) {
-            return detect_hit(Modality::vision, "jpeg", 0.95, bf);
+            return detect_hit(Modality::Vision, "jpeg", 0.95, bf);
         }
         if is_gif(sniff) {
-            return detect_hit(Modality::vision, "gif", 0.95, bf);
+            return detect_hit(Modality::Vision, "gif", 0.95, bf);
         }
         if is_webp(sniff) {
-            return detect_hit(Modality::vision, "webp", 0.95, bf);
+            return detect_hit(Modality::Vision, "webp", 0.95, bf);
         }
         if is_bmp(sniff) {
-            return detect_hit(Modality::vision, "bmp", 0.90, bf);
+            return detect_hit(Modality::Vision, "bmp", 0.90, bf);
         }
 
         // 3) MAGIC-BYTES (audio)
@@ -349,7 +349,7 @@ fn detect_hit(modality: Modality, fmt: &'static str, conf: f32, bf: &ByteFrame) 
     let mut tag = TraceTag::new(
         Phase::Detector,
         match modality {
-            Modality::vision => "vision",
+            Modality::Vision => "vision",
             Modality::Audio => "audio",
             Modality::Text => "text",
             Modality::Binary | Modality::Container => "binary",
@@ -407,7 +407,7 @@ mod tests {
     #[test]
     fn png_detects_vision() {
         let d = Detector::default().detect(&bf(super::PNG));
-        assert!(matches!(d.modality, Modality::vision));
+        assert!(matches!(d.modality, Modality::Vision));
         assert!(d.tag.params.contains("png"));
     }
 
