@@ -1,0 +1,18 @@
+[package]
+name = "sense-core"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+description = "Core types and traits for Sozna-sense (ByteFrame, SenseOut, Adapter, Trace)"
+repository = "https://example.com/sozna-sense"
+
+[lib]
+name = "sense_core"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+ndarray = { workspace = true }
+blake3 = "1.8.2"
+serde = { workspace = true, features = ["derive"] }

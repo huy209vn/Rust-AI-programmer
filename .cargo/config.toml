@@ -1,0 +1,9 @@
+[build]
+rustflags = ["-Ctarget-cpu=native"]  # great for local dev; remove for fully reproducible builds
+
+[profile.dev]
+debug = true
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

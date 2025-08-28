@@ -1,0 +1,13 @@
+[package]
+name = "byte-lm"
+edition.workspace = true
+version.workspace = true
+authors.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+burn = "0.18.0"

@@ -1,0 +1,17 @@
+[package]
+name = "sense-adapter-text"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+description = "Text adapter (Conv1D stem → projection)"
+repository = "https://example.com/sozna-sense"
+
+[lib]
+name = "sense_adapter_text"
+path = "src/lib.rs"
+
+[dependencies]
+sense-core = { path = "../../sense-core" }
+burn = "0.18.0"
+ndarray = { workspace = true }
+anyhow = { workspace = true }

@@ -1,0 +1,18 @@
+[package]
+name = "sense-adapter-audio"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+description = "Audio adapter (PCM→STFT→mel→patch→proj)"
+repository = "https://example.com/sozna-sense"
+
+[lib]
+name = "sense_adapter_audio"
+path = "src/lib.rs"
+
+[dependencies]
+sense-core = { path = "../../sense-core" }
+hound = "3.5.1"
+rustfft = "6.4.0"
+ndarray = { workspace = true }
+anyhow = { workspace = true }

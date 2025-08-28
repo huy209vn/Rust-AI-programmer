@@ -1,0 +1,17 @@
+[package]
+name = "sense-detector"
+version = "0.1.0"
+edition = "2024"
+license = "MIT OR Apache-2.0"
+description = "Modality detection for Sozna-sense (magic bytes, UTF checks)"
+repository = "https://example.com/sozna-sense"
+
+[lib]
+name = "sense_detector"
+path = "src/lib.rs"
+
+[dependencies]
+sense-core = { path = "../sense-core" }
+memchr = "2.7.5"
+encoding_rs = "0.8.35"
+anyhow = { workspace = true }

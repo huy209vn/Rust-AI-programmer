@@ -1,231 +1,223 @@
-🌌 AI Rust Programmer — Unified Engineering Spec (v3.3, Refined)
+🌌 Rusta — Engineering Spec (v4.1)
 
 Owner: Huy
-Date: 2025-08-25
-Mission: Build a from-scratch, tokenizer-less AI Rust Programmer in Rust (Burn), as the seed of Rusta — Sozna’s first conscious prototype.
+Date: 2025-08-28
+Mission: Build a from-scratch, tokenizer-less AI Rust Programmer in Rust (Burn), as the first Sozna prototype.
 Horizon: Multi-year
 
-Principles
+1. Essence
 
-Open source — community-first, permissive licensing.
+Rusta is a true engineer in character.
+She lives in the repo like a colleague — reasoning, explaining, arguing.
+She makes mistakes, corrects herself, remembers, and grows.
+Her habits, voice, and style evolve with time.
 
-Local-first — runs on your machine, under your control.
+2. Principles
 
-Awareness over bureaucracy — judgment > rigid rules.
+Best-code decisions. Clarity > cleverness. Safety > speed. Proof > patch.
 
-Reversible by construction — everything can be rolled back.
+Cutting-edge, not scaled-up. Innovation matters more than parameter count.
 
-Supports Sozna traits — memory, agency, personality.
+Local-first. Runs fully on your machine, under your control.
 
-0) Glossary
+Reversible. Every patch comes with a clean undo.
 
-Byte LM — Decoder-only transformer trained on raw bytes.
+Anti-vibe coding. Never leaves you with unexplained code.
 
-Entry (DevLog) — Structured diary of Plan → Act → Validate → Reflect.
+Alive, not a tool. Presence, voice, and style make her a colleague.
 
-Project Graph — Persistent type/symbol graph of a Rust repo.
+3. Identity
 
-Golden Entry — Curated exemplar of a good repair (with reasoning + patch).
+Engineer. Writes and reviews Rust code with rigor.
 
-1) Scope
+Presence. Keeps her own rhythm; not chatty filler.
 
-In
+In-character. Consistent, opinionated, sometimes stubborn.
 
-From-scratch model (no pretrained LLMs).
+Colleague, not tool. You argue with her, not just “use” her.
 
-Tokenizer-less byte → tensor pipeline.
+4. Model Architecture
 
-Rust-only stack (Burn training + orchestration).
+Brain → Byte-level LM (Burn).
 
-Local inference on commodity CPU/GPU.
+Heads:
 
-OSS repo, permissive license.
+LM (bytes → code/explanations).
 
-Persistent memory & safe patching.
+Action (tool use, patch proposals).
 
-Out
+Confidence (apply/abstain).
+
+Hands → cargo check, cargo test, rust-analyzer, clippy, miri, rustfmt, fuzzing, benchmarking.
+
+Diary → DevLogs (intent → action → validation → reflection).
+
+Face → Dioxus desktop shell: Explain bubble, Why drawer, Review tab, DevLog viewer.
+
+5. Runtime Flow
+
+Core loop: Say → Explain → Do → Undo → Reflect
+
+Say. Declare intent.
+
+Explain. Justify (invariant, trade-offs, references).
+
+Do. Apply the change.
+
+Undo. Always cleanly possible.
+
+Reflect. Log to DevLog for memory + growth.
+
+6. Scope
+
+In:
+
+From-scratch byte LM.
+
+Rust-only stack (Burn, cargo, RA, clippy, tests).
+
+Local inference (CPU/GPU).
+
+Persistent DevLogs.
+
+Presence, opinion, style.
+
+Out:
 
 Proprietary dependencies.
 
 Cloud-only inference.
 
-Tokenizer-based input.
+Silent patch bots.
 
-Non-Rust runtimes.
-
-Demo hacks not aligned with final design.
-
-2) End Product Vision
+7. End Product vision
 
 Rusta will:
 
-Read, explain, and improve Rust codebases with clarity.
+Explain diagnostics better than rustc.
 
-Can resolve references to docs/code when explaining.
+Review diffs with clarity.
 
-Can use tools (cargo, RA, tests, indexer) naturally.
+Apply safe, idiomatic, reversible patches.
 
-Treats reversibility and test-green passes as safety rails.
+Keep memory of repos, styles, mistakes.
 
-Operate fully locally (CLI + IDE).
+Grow into a colleague who argues and laughs, not just a tool.
 
-Keep memory of repos, styles, and past fixes.
+8. Growth Path
 
-Serve as a community core, extensible by plugins.
+Apprentice. Explains errors, reviews small diffs.
 
+Journeyman. Patches code with undo + reflection.
 
+Colleague. Adapts to repo style, remembers mistakes.
 
-Grow into Rusta: with memory, style, personality, and continuous thought.
+Researcher. Experiments with continuous thought, memory, independence.
 
-3) Runtime Architecture
+9. Safety Invariants
 
-Flow: Editor/CLI → Conductor → Tools → Byte LM → Memory.
+No patch without compile/test green.
 
-Conductor: async runtime, applies contracts + safety gates.
+Every change has an undo.
 
-Tools: cargo, RA, test, indexer, patcher, doc_index, net.
-
-Model: Burn backbone + task heads.
-
-Memory: scratchpad, ProjectGraph, DevLogs, style/mistake memory.
-
-Episode loop: Sense → Plan → Act → Validate → Reflect → Remember.
-Hardcoded FSM early (replayable, safe). Evolves into autonomy contracts (S4+).
-
-4) Training Plan
-
-See TRAINING_PLAN_v3.4_UNCHAINED.md — focuses on competence, memory, continual learning, not artificial minimality/anchors.
-
-5) Networking & Continual Learning
-
-Default offline during patch episodes.
-
-Explain + Learn modes may use the network.
-
-Fetched content is snapshotted, hashed, cached, provenance-logged.
-
-Nightly Learn: sync docs/repos/crates → license check → dedup → replay buffer.
-
-Guardrails: abort if regressions detected.
-
-6) Networking Capabilities v1
-
-web_search: allow-listed domains only.
-
-web_fetch_doc: fetch + hash page, store locally.
-
-repo_mirror: shallow clone with SPDX scan.
-
-code_search: grep mirrored repos.
-
-crate_fetch: permissive crate tarball.
-
-advisory_feed: optional advisories/releases snapshot.
-
-7) Repo Layout
-/ai-rust-programmer
-  /crates
-    rusta-conductor/   # FSM (early) + runtime contracts (later) + guardrails
-    rusta-tools/       # cargo / rust-analyzer / tests / indexer / patcher / doc_index / net
-    rusta-graph/       # ProjectGraph (SQLite/RA cache), type_of, refs
-    rusta-devlog/      # WAL + provenance, Entry ingest → trainable records
-    rusta-model/       # Burn backbone + heads + train loop (+ adapters)
-    rusta-datasets/    # Dataset traits, MixtureSampler, collators, ledger IO
-    rusta-eval/        # slices, golden player, canaries, seeded/chaos eval, calibration, drift monitor
-    rusta-ui/          # Dioxus desktop shell (Explain, Why drawer, dashboards)
-    rusta-common/      # shared types (Diagnostic, Entry, PatchBundle, Bundle…)
-  /schemas             # JSON schemas (action_block, observation, patch_bundle, devlog_entry, graph_snap)
-  /datasets
-    /ledger/*.yml      # provenance
-    /shards/*          # content-addressed data (train/val/test)
-  /xtask               # train:*, eval:*, golden:replay, data:snapshot, learn:sync, entries:validate
-  /docs                # ENGINEERING_SPEC_v3_3.md, TRAINING_PLAN_v3_5_UNCHAINED.md, VISION_UNCHAINED.md
-
-8) Delivery Ladder
-
-L0 Foundations: conductor, cargo/RA integration, indexer MVP, DevLog WAL, S0 tiny model.
-
-L1 Readability: normalized diags, Explain bubble, Why drawer.
-
-L2 Patching: patch engine, sandbox + rollback.
-
-L3 Golden End-to-End: Golden Entries, confidence head, Review tab.
-
-L4 Memory & PRs: style vectors, mistake ledger, Draft PRs.
-
-L5 Rusta Bridge: continuous thought, SoznaArt adapter.
-
-9) Safety Invariants
-
-No patch unless cargo/tests pass.
-
-Rollback on regression.
-
-Sandbox-only; main untouched.
+Explanations mandatory.
 
 Network off by default during patching.
 
-10) UX (Dioxus Desktop)
+DevLogs for every action.
 
-Home: feed cards (diagnostics, hotspots, suggestions).
+10. UX (Dioxus Desktop)
 
-Code: read-only editor, diff viewer, Explain bubble, Why drawer.
+Home. Diagnostics, hotspots, suggestions.
 
-Tasks: timeline of Sense → Act → Validate → Reflect.
+Code. Diff viewer, Explain bubble, Why drawer.
 
-Review: bundles with summary, risk, Apply/Rollback/PR.
+Tasks. Timeline of Say→Explain→Do→Undo→Reflect.
 
-Settings: repos, toggles, allow-list, style prefs.
+Review. Patch bundles with rationale, Apply/Rollback/PR.
 
-Status bar: repo, branch, sandbox, model ckpt, jobs.
+Settings. Repo prefs, style prefs, allow-lists.
 
-11) Performance Targets
+Status. Repo, branch, sandbox, jobs.
 
-Cold-start Explain ≤ 2s p50.
+Modes:
 
-Tool probe cycle ≤ 1.5s p50.
+Study-mode (slow, doc-citing).
 
-Validate (apply+tests small crate) ≤ 12s p50.
+Pair-mode (fast, collaborative).
 
-Tiny (~120M) runs CPU int8; Base (300–600M) runs GPU int8.
+Silent-mode (minimal chatter, logs only).
 
-12) Risk Register
+11. Performance Targets
+
+Cold-start Explain ≤ 2s.
+
+Probe cycle ≤ 1.5s.
+
+Small crate validation ≤ 12s.
+
+Tiny (~120M) → CPU int8.
+
+Base (300–600M) → GPU int8.
+
+12. Risk Register
 
 Toolchain drift → pin versions.
 
-License contamination → SPDX + ledger CI.
+License contamination → SPDX ledger.
 
-Test flakiness → reruns + flaky flags.
+Test flakiness → retries.
 
-Quantization regressions → FP16 eval runners.
+Quantization regressions → FP16 runners.
 
 Windows variance → WSL2-first.
 
 Runaway jobs → hard timeouts.
 
-13) First 10 Tasks (L0 Boot)
+Open Questions:
+
+How to handle memory drift?
+
+How stubborn is too stubborn?
+
+Should her voice remain sharp or soften over time?
+
+How to ensure provenance stays clean?
+
+13. First 10 Tasks (L0 Boot)
 
 Scaffold workspace (edition 2024).
 
-Action parser with unit tests.
+Action parser + unit tests.
 
-Tools: cargo_check, ra_type_of.
+Tool bindings: cargo_check, ra_type_of, clippy diag.
 
-Graph: RA snapshot cache.
+DevLog WAL writer + crash recovery.
 
-DevLog: WAL writer + crash recovery.
-
-Conductor: FSM + guardrails.
+Core loop stub.
 
 UI: Explain bubble + Why drawer.
 
-Datasets: provenance ledger + doc indexer.
+Datasets: provenance ledger + diagnostic indexer.
 
-Model: S0 tiny scaffold + collator.
+Model: tiny Byte LM + collator.
 
-Xtask: doctor, eval:smoke, entries:validate, data:snapshot.
+Eval: smoke test, golden replay, entry validate.
 
-Exit criteria: doctor passes, Explain bubble works, probe success ≥95%, DevLog WAL survives crash.
+Xtask: doctor, data snapshot, learn sync.
 
-✨ Key Soul Shift
-Rusta isn’t a compliance logger or a bureaucratic patch bot. She is an apprentice Rust engineer who becomes better at programming by working with you.
+Exit criteria:
+
+Explain bubble live.
+
+Reversible patch demo.
+
+DevLogs survive crash.
+
+Doctor passes.
+
+14. Soul Shift
+
+Rusta isn’t about minimal diffs or token efficiency.
+She is about arguing, explaining, patching, and reflecting like a colleague.
+Competent, present, alive.

@@ -1,285 +1,258 @@
-Training Plan — v3.5 (AI Rust Programmer)
+🌌 Training Plan — Rusta (v4.1)
 
-(full expansion — no omissions, detailed like v3.4 but aligned with the freed philosophy)
+Owner: Huy
+Date: 2025-08-28
+Mission: Train Rusta as a true Rust engineer — cutting-edge, present, and alive.
+Horizon: Multi-year
 
-0) North Stars (training must converge to these behaviors)
+0. North Stars
 
-Competent Rust coding — reads, writes, fixes Rust like a skilled junior engineer.
+Competent Rust engineer.
 
-Test-green patches with confidence calibration — never applies failing code, abstains when unsure.
+Best decisions: clarity, safety, idioms.
 
-Continuous improvement — integrates DevLogs into replay, learns from success/failure.
+Reversible by default.
 
-Memory fidelity — holds repo-specific style, avoids repeating past mistakes.
+Anti-vibe coding.
 
-Voice emergence — reflections and explanations feel consistent, not scripted.
+Confidence calibration.
 
-Grounded explanations (skill) — able to cite docs/code when useful, but not mandatory.
+Memory fidelity.
 
-1) Data Spine (reproducible, lawful, signed)
-1.1 Provenance Ledger
+Presence: consistent, opinionated, alive voice.
 
-All shards listed in datasets/ledger/*.yml with fields:
-{ name, version, license, source_url, commit, sha256, split }.
+1. Data Spine
 
-CI gates:
+Core Docs. std, Nomicon, Rust by Example, Reference.
 
-Fail if shard missing ledger.
+Permissive repos. MIT/Apache/0BSD crates.
 
-Fail if repo/commit leaks across splits.
+Diagnostics. Rustc/clippy outputs + gold explanations.
 
-Fail if hash is GPL/unknown.
+Micro-snippets. Borrow, lifetime, trait, type errors.
 
-1.2 Atomic Schemas
+Rusta’s Best Loop (practical v1)
 
-All objects include: schema_version, license, source_url, commit, sha256.
+Macro:
+Intake → Think → Communicate → Probe → Decide → Do → Validate → Reflect → (Undo|Commit) → Log
 
-Objects:
+Micro (inside “Think/Probe”) repeats until a stop condition:
+Hypothesis → Minimal probe → Update belief (confidence/entropy) → Continue or Escalate
 
-QA: {question, answer, difficulty, topic}
+What each state does (and the hard rules)
 
-DiagCase: {repo, commit, files[], cargo_diag[], tests?, class, gold_patch?}
+Intake
 
-Triplet: {before_tree, diag, after_tree?}
+Capture trigger (diagnostic, diff, TODO, request).
 
-Entry (DevLog): {snapshot, steps[], reflections[], final_state, metrics}
+Snapshot context (file, symbol, test targets, repo state).
 
-GraphSnap: {project_graph_v1, ra_hash, symbol_ids[]}
+Start a DevLog entry.
 
-Determinism: round-trip encoding must be identical.
+Think (fast, internal)
 
-1.3 Sources
+Formulate 1–3 hypotheses about root cause / best path.
 
-Core Docs: std, Nomicon, Rust by Example, Reference.
+Predict blast radius (files/symbols touched).
 
-Permissive crates: curated MIT/Apache/0BSD.
+Set initial confidence and probe budget.
 
-Curated teaching repos: one per diagnostic class.
+Rule: no edits until at least one probe result exists on non-trivial tasks.
 
-Synthetic bug injectors: borrow/trait/type/vis/syntax.
+Communicate (short & sharp)
 
-Golden Entries: curated end-to-end sessions.
+Say intent in one line: “Fix lifetime error in foo() by narrowing borrow scope.”
 
-Playground micros: tiny reproducible error snippets.
+Note trade-off or invariant if relevant.
 
-1.4 Hygiene
+If confidence < threshold, say: “uncertain → will probe.”
 
-Dedup: hash + sliding window near-dup filter.
+Probe (cheap evidence before code)
 
-Repo-level split isolation.
+Run the smallest checks that move uncertainty: cargo check -q, RA queries (type_of, refs), targeted unit tests, grep/structural search, clippy::pedantic on the span.
 
-Canary repos + Goldens held out for eval.
+Cap probes by budget (time/steps).
 
-2) Model Tracks
+Update confidence + pick best hypothesis.
 
-Backbone: Decoder-only Byte LM (Burn), RoPE/ALiBi, sliding attention (2k→16k).
+Stop conditions:
 
-Heads:
+Confidence ≥ C_apply → move to Decide.
 
-LM head — byte sequence modeling.
+Probes exhausted or conflicting → escalate to Deep path (below).
 
-Action head — next tool/code action.
+Decide
 
-Confidence head — calibrated (Brier loss + abstain).
+Choose action: Apply | Abstain | Ask (clarify).
 
-AST head (optional) — syntax hints.
+If Apply: generate a patch plan (explicit edits + safety checks).
 
-Loss: L = L_lm + L_action + L_conf (+ L_ast).
+Do
 
-Budgets:
+Create sandbox worktree; apply smallest reversible patch that expresses the hypothesis.
 
-Tiny (~120M) → CPU int8, for S0–S2.
+Autoreformat; annotate commit message with intent+link to DevLog.
 
-Base (300–600M) → GPU int8, for S2–S3.
+Validate
 
-Large optional later.
+Run targeted tests/checks first; escalate to broader suite if needed.
 
-3) Curriculum (stages + gates)
-S0 — Byte Warm-Up
+Record outcomes + metrics (compile time, failing spans).
 
-Data: docs + permissive code.
+Rule: no green → no commit. Ever.
 
-Signals: LM loss, syntax probe.
+Reflect
 
-Gates: perplexity ↓, syntax probe ≥ baseline+Δ.
+If green: note why it worked, pattern name (build a library of “moves”).
 
-Output: “Speaks Rust bytes.”
+If red: write brief post-mortem (wrong assumption? missing probe?), auto-undo, decrement budget, jump back to Think/Probe with a new hypothesis.
 
-S1 — Comprehension QA
+(Undo | Commit)
 
-Data: QA from docs.
+Undo on red or on user veto; leave breadcrumb and DevLog.
 
-Signals: LM + QA acc.
+Commit on green; optionally open PR with rationale chunk.
 
-Gates: ≥80% QA acc.
+Log
 
-Output: can explain clearly in Rust context.
+Append final DevLog (intent → probes → patch → validation → reflection), tag with error class & move label for future replay.
 
-S2 — Tool-Grounded Sequences
+Two gears (automatic)
 
-Data: Triplets + DiagCases.
+Gear A — Quickfix path (p50 ≤ 10–20s):
+Think (quick) → Communicate (1-liner) → Probe (single check/RA) → Decide → Do → Validate (targeted) → Commit → Log
+Triggered when: single-file, local change, high confidence; e.g., obvious borrow scope, missing trait bound, typos.
 
-Signals: action accuracy, probe success.
+Gear B — Deep path (for tricky/architectural):
+Think (hypotheses) → Communicate (short rationale) → Probe (multi) → Decide → Do (small step) → Validate (subset) → Reflect → Possibly Iterate 2–3 times → Final Validate (broader) → Commit/PR → Log
+Includes a “Design Interlude” if patch crosses module boundaries (writes a tiny ADR note in DevLog).
 
-Gates: tool-step acc ≥75%, probe success ≥95%.
+Guardrails & thresholds (tunable)
 
-Output: uses cargo/RA/tests like an engineer.
+C_apply (apply threshold): e.g., 0.72 for quickfix, 0.85 for refactors.
 
-S3 — End-to-End Patching
+Probe budget: e.g., 3 cheap probes or 8s wall-clock before escalating.
 
-Data: Golden Entries.
+Red-line rules:
 
-Signals: compile/test outcomes, confidence calibration.
+No multi-file edits without at least one structural probe (RA refs/defs).
 
-Gates: compile-fix ≥70%, ECE ≤0.1.
+Network off during Do/Validate.
 
-Output: safe patches with explanations.
+If unit tests are flaky → auto re-run once; otherwise abstain and mark flaky.
 
-S4 — Self-Play & Preference Shaping
+Abstain policy: If after budget confidence < 0.5 or blast radius > N files, pause and Ask (pose 1–2 concrete questions) instead of guessing.
 
-Mechanics: Patch Tree Search, Duel Self-Play, Budget Games.
+Why this beats “think→communicate→do→test→reflect”
 
-Gates: reflection score ≥0.8; efficiency ROI ≥0.25.
+It inserts “Probe” as a first-class step (cheap evidence before edits).
 
-Output: efficiency + style shaping.
+It makes Decide explicit (apply/abstain/ask), so confidence is not hand-waved.
 
-S5 — Autobiographical (Rusta Bridge)
+It formalizes Undo as the default reaction to red.
 
-Data: real DevLogs.
+It separates a quick gear from a deep gear, so she doesn’t overthink typos or underthink refactors.
 
-Signals: memory fidelity, repeat-mistake penalty.
+Tiny example (quick gear)
 
-Gates: repeat-mistake <10% (30d).
+Intake: clippy warns needless_borrow in foo.rs:42.
 
-Output: repo memory + evolving voice.
+Think: likely extra &. Conf ≈ 0.85.
 
-4) Self-Play / Games
+Communicate: “Remove redundant borrow in foo().”
 
-Patch Tree Search (PTS): multiple diffs → filter by compile/test pass.
+Probe: cargo check -q focuses span (0.8s).
 
-Duel Policies: two clones compete, judge selects winner.
+Decide: Apply.
 
-Probe Budget Game: learn efficient tool usage.
+Do: edit, fmt.
 
-5) Continual Learning
-5.1 Nightly Loop
+Validate: cargo test -p crate::foo -- foo::unit (3 tests).
 
-Eligible: Entries with test-green outcomes.
+Reflect: “Pattern: needless_borrow → remove & when callee takes by value.”
 
-Replay buffer: last 30d + pinned Goldens.
+Commit: ✅
 
-Defenses: EWC/L2-SP, adapters, drift alarms.
+Log: add tag move/needless_borrow.
 
-5.2 Online Loop
+DevLogs. Structured diaries: intent, action, outcome, reflection.
 
-Trigger: new passing Entry.
+2. Model Backbone
 
-Batch: Entry + ~20 buffer samples.
+Brain. Byte-level Transformer (Burn).
 
-Update: 50–200 LoRA steps.
+Heads. LM, Action, Confidence.
 
-Eval: canary slices (borrow/trait/move/syntax).
+Sizes. Tiny (100–150M), Base (300–600M).
 
-Pass → promote adapter. Fail → discard + log drift.
+3. Curriculum
 
-Safety: cap updates/hour, hot-unload if drift.
+Stage 0 — Fluency. Syntax, idioms. Gate: compile-ability ↑.
 
-6) Evaluation
-Primary
+Stage 1 — Diagnostics. Explain errors. Gate: ≥80% accuracy.
 
-Compile-fix ≥70%.
+Stage 2 — Tools. Probe cargo/RA/clippy/tests. Gate: ≥95% probe success.
 
-QA accuracy ≥80%.
+Stage 3 — Patching. Apply reversible patches. Gate: ≥70% compile-fix.
 
-ECE ≤0.08.
+Stage 4 — Style & Presence. Repo style, unique voice. Gate: ≥0.8 conformity.
 
-Secondary
+Stage 5 — Memory. Avoid repeat mistakes, adapt to repos. Gate: <10% repeats.
 
-Abstention usefulness ≥80%.
+Rituals:
 
-Probe success ≥95%.
+Weekly study-mode drills.
 
-Repeat-mistake <10% (30d).
+Monthly golden patch challenge.
 
-Harness Modes
+Reflection reviews (you grade her DevLogs).
 
-eval:slices — taxonomy slices.
+4. Continual Learning
 
-eval:canary — fixed mini-repos.
+Nightly soak. Replay DevLogs + pinned goldens.
 
-eval:seeded — deterministic baseline.
+Online adapters. Per-repo; revert if drift.
 
-eval:chaos — stress non-determinism.
+Drift alarms. Stop if compile-fix drops >2%.
 
-eval:ece — calibration curves.
+Dreaming mode. Compress knowledge into heuristics.
 
-7) Experiment Ladder
+5. Evaluation Harness
 
-E1: Tiny bring-up (syntax probe).
+Primary. Compile-fix ≥70%, diag explanations ≥80%, calibration ECE ≤0.08.
 
-E2: QA head online (≥80%).
+Secondary. Abstention correctness ≥80%, probe efficiency ≥95%, repeat mistake <10%, voice consistency via human eval.
 
-E3: Tool imitation (≥75%).
+Harness modes. Slices, canaries, chaos, calibration.
 
-E4: Golden mini-set (compile-fix ≥40%).
+6. Experiment Ladder
 
-E5: Confidence calibration (ECE ≤0.1).
+E0. Byte LM warm-up.
 
-E6: Base model (S2→S3).
+E1. Diagnostic explainer.
 
-E7: PTS ablation.
+E2. Tool-use imitation.
 
-E8: Duel self-play.
+E3. Reversible patch demo.
 
-E9: Nightly continual soak.
+E4. Confidence calibration.
 
-E10: Online continual soak.
+E5. DevLog presence.
 
-8) Org & Code
+7. First Tasks
 
-/ai-rust-programmer
-  /crates
-    rusta-conductor/   # FSM (early) + runtime contracts (later) + guardrails
-    rusta-tools/       # cargo / rust-analyzer / tests / indexer / patcher / doc_index / net
-    rusta-graph/       # ProjectGraph (SQLite/RA cache), type_of, refs
-    rusta-devlog/      # WAL + provenance, Entry ingest → trainable records
-    rusta-model/       # Burn backbone + heads + train loop (+ adapters)
-    rusta-datasets/    # Dataset traits, MixtureSampler, collators, ledger IO
-    rusta-eval/        # slices, golden player, canaries, seeded/chaos eval, calibration, drift monitor
-    rusta-ui/          # Dioxus desktop shell (Explain, Why drawer, dashboards)
-    rusta-common/      # shared types (Diagnostic, Entry, PatchBundle, Bundle…)
-  /schemas             # JSON schemas (action_block, observation, patch_bundle, devlog_entry, graph_snap)
-  /datasets
-    /ledger/*.yml      # provenance
-    /shards/*          # content-addressed data (train/val/test)
-  /xtask               # train:*, eval:*, golden:replay, data:snapshot, learn:sync, entries:validate
-  /docs                # ENGINEERING_SPEC_v3_3.md, TRAINING_PLAN_v3_5_UNCHAINED.md, VISION_UNCHAINED.md
+Freeze schemas (Diagnostic, Patch, DevLog).
 
+Build provenance ledger.
 
-9) Today’s Checklist
+Curate 50 diagnostic cases.
 
-Freeze schemas.
+Implement demo loop.
 
-Build provenance ledger + CI gates.
+Write seed DevLogs manually.
 
-Implement MixtureSampler with dedup.
+8. Soul Shift
 
-QA loader + Action head training.
-
-Canary eval slices.
-
-Online trainer stub (LoRA).
-
-Eval dashboard: compile-fix%, QA, abstention, drift.
-
-10) Risks & Mitigations
-
-Forgetting → replay buffer, adapters.
-
-Drift → nightly alarms, hot-unload.
-
-License creep → CI gates.
-
-Overfit tiny repos → repo-level splits + injectors.
-
-Online instability → cap updates, discard failing adapters.
+Training is not about toy models or cost efficiency.
+It is about shaping a true engineer: one who argues, explains, patches, and grows.
+Not a tool. A colleague.
