@@ -1,16 +1,14 @@
-[package]
-name = "sense-adapter-binary"
-version = "0.1.0"
-edition = "2024"
-license = "MIT OR Apache-2.0"
-description = "RawByteAdapter (normalize bytes → proj)"
-repository = "https://example.com/sozna-sense"
 
-[lib]
-name = "sense_adapter_binary"
-path = "src/lib.rs"
+            [package]
+            name = "sense-adapters-binary"
+            version = "0.0.0"
+            edition = "2024"
+            publish = false
+            license = "MIT OR Apache-2.0"
+            description = "binary adapter (skeleton)"
 
-[dependencies]
-sense-core = { path = "../../sense-core" }
-ndarray = { workspace = true }
-anyhow = { workspace = true }
+            [dependencies]
+            anyhow = "1.0.99"
+thiserror = "2.0.16"
+tracing = "0.1.41"
+            sense-core = { path = "../../sense-core" }

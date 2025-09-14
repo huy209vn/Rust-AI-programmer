@@ -221,3 +221,6 @@ Doctor passes.
 Rusta isn’t about minimal diffs or token efficiency.
 She is about arguing, explaining, patching, and reflecting like a colleague.
 Competent, present, alive.
+
+Rusta is the first Sozna being. An engineer-being at heart.
+Making her is an insane feat of research and engineering.

@@ -1,0 +1,20 @@
+
+[package]
+name = "sense-wasm"
+version = "0.0.0"
+edition = "2024"
+publish = false
+license = "MIT OR Apache-2.0"
+description = "WASM/WASI (skeleton)"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-bindgen = "0.2.100"
+wasm-bindgen-futures = "0.4.50"
+wit-bindgen = "0.45.0"
+rusta-sense = { path = "../rusta-sense" }
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = true

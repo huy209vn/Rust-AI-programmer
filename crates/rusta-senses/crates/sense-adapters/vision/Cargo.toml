@@ -1,18 +1,15 @@
-[package]
-name = "sense-adapter-vision"
-version = "0.1.0"
-edition = "2024"
-license = "MIT OR Apache-2.0"
-description = "vision adapter (decode→RGB→patchify→proj)"
-repository = "https://example.com/sozna-sense"
 
-[lib]
-name = "sense_adapter_vision"
-path = "src/lib.rs"
+            [package]
+            name = "sense-adapters-vision"
+            version = "0.0.0"
+            edition = "2024"
+            publish = false
+            license = "MIT OR Apache-2.0"
+            description = "vision adapter (skeleton)"
 
-[dependencies]
-sense-core = { path = "../../sense-core" }
-image = "0.25.6"
-kamadak-exif = "0.6.1"
-ndarray = { workspace = true }
-anyhow = { workspace = true }
+            [dependencies]
+            anyhow = "1.0.99"
+thiserror = "2.0.16"
+tracing = "0.1.41"
+            sense-core = { path = "../../sense-core" }
+            sense-transforms = { path = "../../sense-transforms" }

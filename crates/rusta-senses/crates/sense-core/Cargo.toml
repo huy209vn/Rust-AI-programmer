@@ -1,18 +1,25 @@
 [package]
 name = "sense-core"
-version = "0.1.0"
-edition = "2024"
-license = "MIT OR Apache-2.0"
-description = "Core types and traits for Sozna-sense (ByteFrame, SenseOut, Adapter, Trace)"
-repository = "https://example.com/sozna-sense"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+authors.workspace = true
 
-[lib]
-name = "sense_core"
-path = "src/lib.rs"
+[features]
+# Default to std; other crates can opt into `alloc`/`no_std` builds.
+default = ["std"]
+std = []
+alloc = []
+serde = ["dep:serde"]
+ffi = []
+no_agent_leaks = []
 
 [dependencies]
-anyhow = { workspace = true }
-thiserror = { workspace = true }
-ndarray = { workspace = true }
-blake3 = "1.8.2"
-serde = { workspace = true, features = ["derive"] }
+thiserror.workspace = true
+bitflags.workspace = true
+blake3.workspace = true
+serde.workspace = true
+
+
+[dev-dependencies]

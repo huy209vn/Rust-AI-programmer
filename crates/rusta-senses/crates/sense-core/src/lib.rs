@@ -1,17 +1,37 @@
-//! Core contracts for Sozna-sense.
+#![forbid(unsafe_code)]
+#![deny(missing_docs)]
+#![deny(clippy::unwrap_used, clippy::expect_used)]
+#![cfg_attr(not(feature = "std"), no_std)]
+
+//! `sense-core` — stable contracts for Sozna / rusta-sense.
 //!
-//! Defines ByteFrame (input), TraceTag/Phase/Status (observability),
-//! SenseOut + Sidecar (output), Modality/SenseConfig (routing/config), and Adapter trait.
+//! - **No IO, no decoders, no runtime**. Pure types/traits/config.
+//! - Designed for **determinism**, **semver stability**, and **FFI/WASM hygiene**.
+//! - Adapters/Detector implementations live in other crates.
 
-pub mod adapter;
-pub mod byteframe;
-pub mod senseout;
-pub mod trace;
+#[cfg(not(feature = "std"))]
+extern crate alloc;
 
-pub use adapter::{Adapter, BoxedAdapter};
-pub use byteframe::ByteFrame;
-pub use senseout::{
-    AudioMeta, BackendInfo, BinaryMeta, Modality, NewlineNorm, SenseConfig, SenseOut, Sidecar,
-    TextMeta, TextNorm,
-};
-pub use trace::{Phase, Range, Reason, ReasonClass, Status, Trace, TraceTag};
+pub mod bytes;
+pub mod frame;
+pub mod status;
+pub mod error;
+pub mod determinism;
+pub mod config;
+pub mod evidence;
+pub mod sidecar;
+pub mod registry;
+pub mod prelude;
+pub mod constants;
+pub mod validators;
+#[cfg(feature = "ffi")]
+pub mod ffi;
+
+pub mod traits {
+    //! Adapter / Detector contracts.
+    pub mod adapter;
+    pub mod detector;
+}
+
+// Re-export a convenient prelude for downstream crates.
+pub use prelude::*;

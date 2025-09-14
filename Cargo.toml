@@ -13,30 +13,53 @@ members = [
     "crates/rusta-eval",
     "crates/rusta-ui",
     "crates/rusta-cli",
-    "crates/rusta-senses",                           # the facade/high-level API crate
+
+    # rusta-senses facade/high-level API crate
+    "crates/rusta-senses",
+
+    # sense crates (full set)
     "crates/rusta-senses/crates/sense-core",
     "crates/rusta-senses/crates/sense-detector",
+    "crates/rusta-senses/crates/sense-decoder",
+    "crates/rusta-senses/crates/sense-transforms",
+    "crates/rusta-senses/crates/sense-flow",
     "crates/rusta-senses/crates/sense-adapters/text",
     "crates/rusta-senses/crates/sense-adapters/audio",
     "crates/rusta-senses/crates/sense-adapters/vision",
     "crates/rusta-senses/crates/sense-adapters/binary",
     "crates/rusta-senses/crates/sense-cli",
+    "crates/rusta-senses/crates/sense-bench",
+    "crates/rusta-senses/crates/sense-goldenkit",
+    "crates/rusta-senses/crates/sense-metrics",
+    "crates/rusta-senses/crates/sense-ffi",
+    "crates/rusta-senses/crates/sense-wasm",
+
     "crates/xtask",
 ]
-
 resolver = "2"
 
 [workspace.package]
 edition = "2024"
+rust-version = "1.89"
 version = "0.1.0"
-authors = ["Huy duchuytran12341@gmail.com"]
+license = "MIT OR Apache-2.0"
+authors = ["Huy <duchuytran12341@gmail.com>"]
 
 [workspace.dependencies]
 anyhow = "1.0.99"
 thiserror = "2.0.16"
-clap = { version = "4.5.46", features = ["derive"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.143"
 tracing = "0.1.41"
 tracing-subscriber = "0.3.19"
-ndarray = "0.16.1"
+blake3 = "1.8.2"
+bitflags = "2.9.2"
+crossbeam-channel = "0.5.15"
+clap = { version = "4.5.46", features = ["derive"] }
+wasm-bindgen = { version = "0.2.100", optional = true }
+wasm-bindgen-futures = { version = "0.4.50", optional = true }
+wit-bindgen = { version = "0.45.0", optional = true }
+cbindgen = { version = "0.29.0", optional = true }
+bindgen = { version = "0.72.0", optional = true }
+criterion = { version = "0.7.0", optional = true }
+

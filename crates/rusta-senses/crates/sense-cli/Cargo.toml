@@ -1,21 +1,14 @@
-[package]
-name = "sense-cli"
-version = "0.1.0"
-edition = "2024"
-license = "MIT OR Apache-2.0"
-description = "Tiny CLI harness for Sozna-sense"
-repository = "https://example.com/sozna-sense"
 
-[[bin]]
-name = "sense"
-path = "src/main.rs"
+            [package]
+            name = "sense-cli"
+            version = "0.0.0"
+            edition = "2024"
+            publish = false
+            license = "MIT OR Apache-2.0"
+            description = "CLI (skeleton)"
 
-[dependencies]
-sense-core = { path = "../sense-core" }
-sense-detector = { path = "../sense-detector" }
-sense-adapter-text = { path = "../sense-adapters/text" }
-sense-adapter-audio = { path = "../sense-adapters/audio" }
-sense-adapter-vision = { path = "../sense-adapters/vision" }
-sense-adapter-binary = { path = "../sense-adapters/binary" }
-clap = { workspace = true }
-anyhow = { workspace = true }
+            [dependencies]
+            anyhow = "1.0.99"
+tracing = "0.1.41"
+clap = { version = "4.5.46", features = ["derive"] }
+            rusta-sense = { path = "../rusta-sense" }

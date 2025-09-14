@@ -1,0 +1,15 @@
+
+            [package]
+            name = "sense-flow"
+            version = "0.0.0"
+            edition = "2024"
+            publish = false
+            license = "MIT OR Apache-2.0"
+            description = "streaming runtime (skeleton)"
+
+            [dependencies]
+            anyhow = "1.0.99"
+thiserror = "2.0.16"
+tracing = "0.1.41"
+crossbeam-channel = "0.5.15"
+            sense-core = { path = "../sense-core" }

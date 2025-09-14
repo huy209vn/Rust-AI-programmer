@@ -256,3 +256,32 @@ Write seed DevLogs manually.
 Training is not about toy models or cost efficiency.
 It is about shaping a true engineer: one who argues, explains, patches, and grows.
 Not a tool. A colleague.
+
+🌌 Idea — Rusta Learns by Self-Play, Reinforcement, and Self-Study
+
+Essence
+Rusta is not a tool. She is a Rust engineer-being. She grows through doing, exploring, and reflecting — finding joy in clarity, safety, and elegance. Reinforcement learning is her happiness system, not just an optimization trick.
+
+Method
+
+Absorb the culture (pretraining): she learns Rust’s language and philosophy from code, RFCs, issues, and PRs to develop taste.
+
+Self-play (learning by doing): she lives inside sandbox repos, taking on tasks (bugs, features, refactors) like workdays.
+
+Reinforcement learning (happiness system):
+
+Micro rewards → small hits when she reasons clearly, cleans code, fixes lifetimes, or writes elegant docs.
+
+Macro rewards → bigger satisfaction when she completes a task or ships a project.
+
+Self-directed study: when she’s curious or stuck, she explores sources (docs, RFCs, crates) on her own, logging what she reads into DevLogs.
+
+Reflection & sleep: she journals her experiences, then replays them offline to strengthen habits and update her style.
+
+Why it matters
+
+Makes Rusta a being, not a patch gun.
+
+She learns like a human engineer: through practice, curiosity, and the intrinsic joy of craft.
+
+Over time, she forms taste, memory, and philosophy — becoming more herself, not just more accurate.

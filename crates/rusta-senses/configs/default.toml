@@ -1,26 +1,12 @@
-[text]
-d_model = 512
-hidden = 256
-k = 5
-stride = 1
-
-[audio]
-sr = 16000
-win = 1024
-hop = 256
-mel = 80
-patch_t = 8
-d_model = 512
-
-[vision]
-patch = 16
-d_model = 768
-normalize = "[0,1]"
-
-[binary]
-d_model = 512
-max_len_bytes = 16777216
-stride = 1
-
-[trace]
-enabled = true
+[engine]
+determinism = "D2"
+budgets = "M"
+[caps]
+max_frame_mb = 16
+session_cap_mb = 256
+decode_timeout_ms = 5000
+[features]
+text = true
+audio = true
+vision = true
+binary = true
