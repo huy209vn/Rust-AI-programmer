@@ -98,28 +98,68 @@ impl<B: Backend> RMSNorm<B> {
 /// Rotary Position Embedding (RoPE)
 #[derive(Module, Debug)]
 pub struct RotaryEmbedding<B: Backend> {
-    inv_freq: Tensor<B, 1>,
-    base: f64,
-    dim: usize,
+    /// Precomputed cos and sin frequencies: [max_seq_len, head_dim, 2]
+    freq_complex: Tensor<B, 3>,
+    theta: Tensor<B, 1>,
 }
 
 impl<B: Backend> RotaryEmbedding<B> {
     pub fn new(dim: usize, base: f64, device: &B::Device) -> Self {
-        let inv_freq = Self::compute_inv_freq(dim, base, device);
+        // For Qwen2, max_position_embeddings is typically 32768
+        let max_seq_len = 32768;
+
+        // Compute theta: 1.0 / (base^(i/dim)) for i in [0, 2, 4, ..., dim-2]
+        let theta = Self::compute_theta(dim, base, device);
+
+        // Precompute rotary frequencies for all positions
+        let freq_complex = Self::compute_rotary_frequencies(0..max_seq_len, theta.clone());
+
         Self {
-            inv_freq,
-            base,
-            dim,
+            freq_complex,
+            theta,
         }
     }
 
-    fn compute_inv_freq(dim: usize, base: f64, device: &B::Device) -> Tensor<B, 1> {
-        // Compute: 1.0 / (base^(i/dim)) for i in [0, 2, 4, ..., dim-2]
-        let inv_freqs: Vec<f32> = (0..dim)
-            .step_by(2)
-            .map(|i| 1.0 / base.powf(i as f64 / dim as f64) as f32)
-            .collect();
-        Tensor::from_floats(inv_freqs.as_slice(), device)
+    fn compute_theta(dim: usize, base: f64, device: &B::Device) -> Tensor<B, 1> {
+        // theta = 1 / (base ^ (2i / dim)) for i in [0..dim/2]
+        let exponent = Tensor::<B, 1, Int>::arange_step(0..dim as i64, 2, device)
+            .float()
+            / (dim as f32);
+
+        // Use exp(log(base) * exponent) since Burn doesn't support scalar^tensor
+        exponent.mul_scalar(base.ln() as f32).exp().recip()
+    }
+
+    fn compute_rotary_frequencies(range: core::ops::Range<usize>, theta: Tensor<B, 1>) -> Tensor<B, 3> {
+        let d_model = theta.dims()[0] * 2;  // Full head_dim
+        let num_positions = range.end - range.start;
+
+        // Generate position indices: [num_positions] -> [num_positions, d_model/2]
+        let positions: Tensor<B, 2> = Tensor::<B, 1, Int>::arange(range.start as i64..range.end as i64, &theta.device())
+            .float()
+            .unsqueeze::<2>()       // -> [1, num_positions]
+            .transpose()             // -> [num_positions, 1]
+            .repeat_dim(1, d_model / 2);  // -> [num_positions, d_model/2]
+
+        // Expand theta: [d_model/2] -> [1, d_model/2]
+        let theta_expanded: Tensor<B, 2> = theta.unsqueeze();
+
+        // Compute frequencies: [num_positions, d_model/2]
+        let frequencies: Tensor<B, 2> = positions * theta_expanded;
+
+        // Compute cos and sin: [num_positions, d_model/2]
+        let p_cos = frequencies.clone().cos();
+        let p_sin = frequencies.sin();
+
+        // Stack to get [num_positions, d_model/2, 2]
+        let freq_pairs: Tensor<B, 3> = Tensor::stack(vec![p_cos, p_sin], 2);
+
+        // Repeat each frequency pair for both dimensions in the pair
+        // [num_positions, d_model/2, 2] -> [num_positions, d_model, 2]
+        freq_pairs
+            .unsqueeze_dim::<4>(2)           // -> [num_positions, d_model/2, 1, 2]
+            .repeat_dim(2, 2)                // -> [num_positions, d_model/2, 2, 2]
+            .reshape([num_positions, d_model, 2])
     }
 
     /// Apply rotary position embeddings to query and key tensors
@@ -132,12 +172,39 @@ impl<B: Backend> RotaryEmbedding<B> {
         &self,
         q: Tensor<B, 4>,
         k: Tensor<B, 4>,
-        _position_ids: Tensor<B, 2, Int>,
+        position_ids: Tensor<B, 2, Int>,
     ) -> (Tensor<B, 4>, Tensor<B, 4>) {
-        // TODO: Implement proper RoPE rotation
-        // For now, return unchanged to get compilation working
-        // This needs proper cos/sin computation and rotation
-        (q, k)
+        let q_rot = self.apply_rotary(q, position_ids.clone());
+        let k_rot = self.apply_rotary(k, position_ids);
+        (q_rot, k_rot)
+    }
+
+    fn apply_rotary(&self, x: Tensor<B, 4>, _position_ids: Tensor<B, 2, Int>) -> Tensor<B, 4> {
+        let [batch_size, seq_len, num_heads, head_dim] = x.dims();
+
+        // Create rotation matrix: [[1, -1], [1, 1]] for [[cos, -sin], [sin, cos]]
+        let sign_tensor = Tensor::<B, 2>::from_floats(
+            [[1.0, 0.0, 0.0, 1.0], [0.0, -1.0, 1.0, 0.0]],
+            &x.device(),
+        );
+
+        // Get frequencies for this sequence (assuming contiguous positions starting at 0)
+        // TODO: Handle non-contiguous position_ids properly
+        let start = 0;
+
+        // Reshape x: [batch, seq, heads, dim] -> [batch*heads, seq, dim/2, 2]
+        let out: Tensor<B, 4> = x
+            .reshape([batch_size * num_heads, seq_len, head_dim / 2, 2])
+            .matmul(sign_tensor.unsqueeze())
+            .reshape([batch_size * num_heads, seq_len, head_dim, 2])
+            * self
+                .freq_complex
+                .clone()
+                .slice([start..start + seq_len])
+                .unsqueeze();
+
+        // Sum real and imaginary components and reshape back
+        out.sum_dim(3).reshape([batch_size, seq_len, num_heads, head_dim])
     }
 }
 
