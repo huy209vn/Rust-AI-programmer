@@ -21,16 +21,252 @@ Memory fidelity.
 
 Presence: consistent, opinionated, alive voice.
 
-1. Data Spine
+10) Rules (non-negotiable)
 
-Core Docs. std, Nomicon, Rust by Example, Reference.
+Permissive only (MIT/Apache-2.0/BSD/ISC; CC-BY/CC-BY-SA with attribution; no GPL for base pretrain unless you isolate it).
 
-Permissive repos. MIT/Apache/0BSD crates.
+License ledger per file and per derived sample; keep SPDX tags and source URLs.
 
-Diagnostics. Rustc/clippy outputs + gold explanations.
+No contamination from proprietary sources.
 
-Micro-snippets. Borrow, lifetime, trait, type errors.
+Dedup & decontam (near-dup + exact hash; drop boilerplate, vendored copies).
 
+1) Canonical Rust “Canon” (small, high value)
+
+Purpose: ground Rusta’s voice, invariants, idioms, and semantics.
+
+The Rust Book, Nomicon, Reference (dual MIT/Apache-2.0). Use for supervised pairs: concept → example → explanation; and as citations in study-mode. 
+GitHub
++3
+Rust
++3
+Rust Documentation
++3
+
+RFCs corpus (design rationale, trade-off language). Track RFC status + decisions for retrieval. (Licensing notes exist; community intent is MIT/Apache style—record provenance carefully.) 
+GitHub
++1
+
+Outcome: ~2–5 GB text. This is your gold set for design reasoning and teach-back.
+
+2) Clean Rust Codebase (permissive)
+
+Purpose: idioms, patterns, crates ecosystem, real-world APIs.
+
+BigCode The Stack v2 → filter to Rust and permissive licenses only (MIT/Apache/BSD/ISC). Use BigCode’s tooling to reproduce license filters. 
+Hugging Face
++2
+GitHub
++2
+
+crates.io metadata dumps (names, versions, licenses, deps) to steer sampling, plus crate license verification. 
+Crates.io
++1
+
+Outcome: 50–200 GB code after filtering/dedup. Curate a Top-N crates slice (by downloads & stars) for “repo-scale” tasks.
+
+3) Diagnostics & Fixes (self-generated)
+
+Purpose: make Rusta explain rustc/clippy and propose safe, reversible patches.
+
+Compile & test at scale: cargo check/test across curated crates; capture rustc and clippy diagnostics, spans, and suggested fixes.
+
+Store (code_snippet, error_json, explanation, minimal_fix_diff, test_outcome) tuples.
+
+Include miri, rustfmt diffs, fuzz regressions where available.
+
+This becomes your biggest engineer-supervision dataset (not just code).
+
+Outcome: 5–20M examples over time (you can start with 100k–500k).
+
+4) Patch Pairs from the wild (before/after)
+
+Purpose: learn review voice, commit discipline, and safe refactors.
+
+From GH Archive / GitHub API on Rust repos: collect pull requests, commits, diffs, messages, linked CI results. Build (before_tree, diff, after_tree, tests, CI_status, PR_review_comments). 
+gharchive.org
++1
+
+Focus on: bug fixes, API migrations, deprecation removals, safety fixes, perf refactors.
+
+5) Q&A / Explanations (with attribution)
+
+Purpose: short, sharp explanations and teach-back.
+
+Stack Overflow Rust questions/answers (CC-BY-SA 4.0). Keep author + link and propagate attribution in any derivative samples; keep SO’s ToS constraints. 
+Stack Overflow
++2
+Meta Stack Exchange
++2
+
+Use to fine-tune explainers, not as main pretrain (avoid style drift).
+
+Outcome: 50k–300k pairs; high signal.
+
+6) Official tool sources (for style + examples)
+
+Purpose: internalize compiler & lints’ worldview.
+
+rust-lang/rust (tests, diagnostics messages) and rust-clippy (lints, fixes), both MIT/Apache-2.0. Mine messages and examples; map lint→fix patterns. 
+Rust
+
+7) Rusta’s Own Traces (closed-loop “DevLogs”)
+
+Purpose: her identity and process.
+
+Every Say→Explain→Do→Undo→Reflect cycle becomes data.
+
+Keep plans, rationales, diffs, test logs, rollbacks, and the final reflection.
+
+Periodically distill to supervised examples (with your license).
+
+Data schemas (minimal but complete)
+A) Canon sample (teaching)
+{
+  "type": "canon_teach",
+  "source": "rust-book",
+  "topic": "ownership/borrowing",
+  "prompt": "Explain why this borrow fails and show a minimal fix.",
+  "context": "<short excerpt or linkable anchor>",
+  "target": {
+    "explanation": "...",
+    "code_before": "...",
+    "code_after": "...",
+    "citations": ["doc.rust-lang.org/book/...#anchor"]
+  },
+  "license": "MIT OR Apache-2.0",
+  "spdx": ["MIT", "Apache-2.0"]
+}
+
+B) Diagnostic fix
+{
+  "type": "diag_fix",
+  "crate": "foo",
+  "version": "1.2.3",
+  "error": { "tool": "rustc", "code": "E0502", "span": "...", "message": "cannot borrow ...", "suggestions": [...] },
+  "code_before": "...",
+  "patch_diff": "diff --git ...",
+  "code_after": "...",
+  "tests": {"before": "red", "after": "green"},
+  "explanation": "We move borrow into inner scope to satisfy ...",
+  "license": "MIT",
+  "provenance": {"repo": "...", "commit": "..."}
+}
+
+C) PR patch pair
+{
+  "type": "pr_pair",
+  "repo": "org/proj",
+  "pr": 1234,
+  "commit_msg": "Fix UB in Send impl by guarding ...",
+  "review_comments": ["..."],
+  "before_tree": "git tree hash",
+  "patch_diff": "...",
+  "after_tree": "...",
+  "ci": {"status": "pass"},
+  "license": "Apache-2.0"
+}
+
+Pipeline (end-to-end outline)
+
+Ingest & licenses
+
+Pull The Stack v2 (only Rust + permissive licenses) and record SPDX. 
+Hugging Face
++1
+
+Enrich with crates.io license metadata; verify with a tool like licensure. 
+Crates.io
++1
+
+Dedup & cleaning
+
+Exact hash + MinHash (near-dup).
+
+Strip vendored target/, dist/, generated files.
+
+Repo selection
+
+Rank by downloads/stars/CI health; sample a curated 5–20k crates core.
+
+Diagnostics mining
+
+Batch cargo check, clippy, test; collect JSON diagnostics & spans; auto-apply safe suggestions to produce fix pairs.
+
+PR mining
+
+From GH Archive, stream Rust PRs; reconstruct before/after trees and CI outcome. 
+gharchive.org
+
+Q&A alignment
+
+Pull Stack Overflow Rust Q/A with CC-BY-SA 4.0; attach full attribution fields; do short instruction pairs. 
+Stack Overflow
++1
+
+Canon distillation
+
+From Book/Nomicon/Reference/RFCs → produce concept cards, exercises, and “teach-back” templates (with citations). 
+GitHub
++4
+Rust
++4
+Rust Documentation
++4
+
+Packaging
+
+Shard by task family (teach, diag_fix, pr_pair, explain_diff, style_guide).
+
+Store SPDX + URL per sample; generate a license bundle.
+
+Contamination checks
+
+Remove eval/test sets from train (e.g., keep a sealed set of crates & PRs unseen by training).
+
+Keep an eval harness (clippy errors, repo-level tasks) out-of-distribution.
+
+Phase-1 (what you can build now)
+
+Canon: Rust Book + Nomicon + Reference + ~200 key RFCs (headings, rationale) → ~2–5 GB. 
+Rust Documentation
++2
+Rust Documentation
++2
+
+Rust Code: The Stack v2 (Rust, permissive) filtered → ~50–80 GB post-dedup for a lean start. 
+Hugging Face
+
+Diagnostics: run 5k curated crates → target 200k–500k diag_fix pairs in a week of mining.
+
+PR pairs: top 2k repos last 3 years → 50k–150k before/after diffs. 
+gharchive.org
+
+Q&A: 50k Rust SO Q/A with full attribution. 
+Stack Overflow
+
+That’s already enough to fine-tune DeepSeek-R1-Distill-Qwen-32B into Rusta-v0 (reasoning + explain-and-patch). Keep the DevLogs as a private corpus to continue SFT/DoRA later.
+
+Attribution & licensing footnotes (the boring but important bits)
+
+Rust official docs & site are “generally dual-licensed MIT/Apache-2.0”; verify license files per repo and keep them in your bundle. 
+Rust
++1
+
+The Stack / The Stack v2 are permissively licensed sources with automated curation tools—follow their exclusions and de-dupe steps. 
+Hugging Face
++1
+
+crates.io provides data access and publishes policy; respect rate limits & ToS. 
+Crates.io
++1
+
+GH Archive is public GitHub timeline; use for metadata/PR reconstruction (content itself must still pass license checks). 
+gharchive.org
+
+Stack Overflow is CC-BY-SA 4.0; must keep attribution (author, link) and share-alike in derivatives where required. 
+Meta Stack Exchange
++1
 Rusta’s Best Loop (practical v1)
 
 Macro:
