@@ -3,7 +3,7 @@ use burn::tensor::{backend::Backend, Tensor, TensorData};
 use safetensors::SafeTensors;
 use std::{collections::HashMap, path::Path};
 
-use crate::{config::Qwen2Config, Qwen2ForCausalLM};
+use crate::model::qwen2::{Qwen2Config, Qwen2ForCausalLM};
 
 /// Loads pretrained Qwen2.5 weights from safetensors format
 pub struct WeightLoader {

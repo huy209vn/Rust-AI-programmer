@@ -4,7 +4,7 @@ use burn::{
     tensor::{backend::Backend, Tensor},
 };
 
-use crate::components::RotaryEmbedding;
+use crate::model::components::RotaryEmbedding;
 
 /// Multi-Head Attention (MHA) for Qwen2.5
 ///

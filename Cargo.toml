@@ -1,11 +1,8 @@
 [workspace]
 members = [
     "crates/rusta-kits",
-    "crates/rusta-brain/byte-lm",
-    "crates/rusta-brain/heads-action",
-    "crates/rusta-brain/heads-confidence",
-    "crates/rusta-brain/io-bytes",
-    "crates/rusta-brain/loop-core",
+    "crates/rusta/model",
+    "crates/rusta/loop-core",
     "crates/rusta-capkit",
     "crates/rusta-devlog",
     "crates/rusta-provenance",

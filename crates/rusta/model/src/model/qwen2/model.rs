@@ -4,10 +4,9 @@ use burn::{
     tensor::{backend::Backend, Tensor},
 };
 
-use crate::{
-    attention::Attention,
+use crate::model::{
+    qwen2::{attention::Attention, config::Qwen2Config},
     components::{MLP, RMSNorm, RotaryEmbedding},
-    config::Qwen2Config,
 };
 
 /// Single Transformer Decoder Layer

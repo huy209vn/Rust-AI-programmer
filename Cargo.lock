@@ -702,20 +702,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "byte-lm"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "burn",
- "burn-tensor",
- "safetensors 0.4.5",
- "serde",
- "serde_json",
- "thiserror 2.0.16",
- "tracing",
-]
-
-[[package]]
 name = "bytemuck"
 version = "1.23.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2409,28 +2395,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "heads-action"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "serde",
- "serde_json",
- "thiserror 2.0.16",
- "tracing",
-]
-
-[[package]]
-name = "heads-confidence"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "serde",
- "serde_json",
- "thiserror 2.0.16",
- "tracing",
-]
-
-[[package]]
 name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2748,17 +2712,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "io-bytes"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "serde",
- "serde_json",
- "thiserror 2.0.16",
- "tracing",
 ]
 
 [[package]]
@@ -4135,6 +4088,20 @@ name = "rusta-kits"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.16",
+ "tracing",
+]
+
+[[package]]
+name = "rusta-model"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "burn",
+ "burn-tensor",
+ "safetensors 0.4.5",
  "serde",
  "serde_json",
  "thiserror 2.0.16",
