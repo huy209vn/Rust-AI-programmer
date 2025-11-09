@@ -10,4 +10,10 @@ serde.workspace = true
 serde_json.workspace = true
 thiserror.workspace = true
 tracing.workspace = true
-burn = "0.18.0"
+
+# Burn deep learning framework
+burn = { version = "0.18.0", features = ["train", "std"] }
+burn-tensor = "0.18.0"
+
+# Safetensors for weight loading
+safetensors = "0.4"
