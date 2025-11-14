@@ -40,42 +40,42 @@ sudo apt-get install cuda-toolkit-12-3
 # Or check your distro's CUDA installation guide
 ```
 
-### Run the Example
+### Run the Inference CLI
 
-```bash
-# Make sure you're in the project root
-cd /path/to/Rust-AI-programmer
-
-# Run the text generation example (native CUDA via CubeCL!)
-cargo run --example text_generation --release -- \
-    --model-path "C:\Users\PC\.cache\huggingface\hub\models--Fortytwo-Network--Strand-Rust-Coder-14B-v1\snapshots\0b9a97c5ab89f9780c95356cc2ea121eb434372e" \
-    --prompt "fn fibonacci(n: u32) -> u32 {" \
-    --max-tokens 150 \
-    --temperature 0.7
+**Interactive Mode (Recommended):**
+```powershell
+# PowerShell (Windows) - Interactive REPL
+cargo run -p rusta-cli --release -- --model-path "C:\Users\PC\.cache\huggingface\hub\models--Fortytwo-Network--Strand-Rust-Coder-14B-v1\snapshots\0b9a97c5ab89f9780c95356cc2ea121eb434372e"
 ```
 
-### Option 2: Try Different Prompts
+This will start an interactive loop where you can type prompts and get responses!
 
+**Single Prompt Mode:**
+```powershell
+# PowerShell (Windows) - One-shot generation
+cargo run -p rusta-cli --release -- --model-path "C:\Users\PC\.cache\huggingface\hub\models--Fortytwo-Network--Strand-Rust-Coder-14B-v1\snapshots\0b9a97c5ab89f9780c95356cc2ea121eb434372e" --prompt "fn fibonacci(n: u32) -> u32 {" --max-tokens 150
+```
+
+**Linux/Mac:**
 ```bash
-# Generate a hash map implementation
-cargo run --example text_generation --release -- \
-    --model-path "YOUR_MODEL_PATH" \
-    --prompt "use std::collections::HashMap;\n\nfn count_words(text: &str) -> HashMap<String, usize> {" \
-    --max-tokens 200
+# Interactive mode
+cargo run -p rusta-cli --release -- -m ~/.cache/huggingface/hub/models--Fortytwo-Network--Strand-Rust-Coder-14B-v1/snapshots/HASH
 
-# Generate error handling code
-cargo run --example text_generation --release -- \
-    --model-path "YOUR_MODEL_PATH" \
-    --prompt "fn read_config(path: &Path) -> Result<Config, ConfigError> {" \
-    --max-tokens 150
+# Single prompt
+cargo run -p rusta-cli --release -- -m MODEL_PATH -p "fn fibonacci(n: u32) -> u32 {" -t 150
 ```
 
 ## ⚙️ Parameters Explained
 
-- `--model-path`: Path to your downloaded model directory
-- `--prompt`: The starting text (Rust code) to continue
-- `--max-tokens`: How many new tokens to generate (default: 100)
+- `--model-path` or `-m`: Path to your downloaded model directory
+- `--prompt` or `-p`: The starting text (Rust code) to continue (optional, for single-prompt mode)
+- `--max-tokens` or `-t`: How many new tokens to generate (default: 200)
 - `--temperature`: Randomness (0.1 = deterministic, 1.0 = creative, default: 0.7)
+
+**Interactive Mode Commands:**
+- Just type your Rust code prompt and press Enter
+- Type `exit` or `quit` to stop
+- Type `clear` to clear the screen
 
 ## 🔧 What's Implemented
 
