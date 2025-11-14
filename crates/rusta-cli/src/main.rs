@@ -44,13 +44,15 @@ fn main() -> anyhow::Result<()> {
 
     // Load tokenizer
     println!("📚 Loading tokenizer...");
-    let tokenizer = Qwen2Tokenizer::from_file(&args.model_path)?;
+    let tokenizer = Qwen2Tokenizer::from_file(&args.model_path)
+        .map_err(|e| anyhow::anyhow!("Failed to load tokenizer: {}", e))?;
     println!("✓ Tokenizer loaded\n");
 
     // Load model
     println!("🧠 Loading Strand-Rust-Coder-14B-v1 model...");
     println!("   (This may take 1-2 minutes for 14B parameters)");
-    let model = load_model::<MyBackend>(&args.model_path, &device)?;
+    let model = load_model::<MyBackend>(&args.model_path, &device)
+        .map_err(|e| anyhow::anyhow!("Failed to load model: {}", e))?;
     println!("✓ Model loaded successfully!\n");
 
     let config = Qwen2Config::strand_rust_coder_14b();
@@ -119,7 +121,8 @@ fn generate_response<B: Backend>(
     device: &B::Device,
 ) -> anyhow::Result<()> {
     // Encode prompt
-    let input_ids = tokenizer.encode(prompt, false)?;
+    let input_ids = tokenizer.encode(prompt, false)
+        .map_err(|e| anyhow::anyhow!("Failed to encode prompt: {}", e))?;
     println!("\n📝 Prompt tokens: {}", input_ids.len());
 
     // Convert to tensor
@@ -151,7 +154,8 @@ fn generate_response<B: Backend>(
         .map(|&id| id as u32)
         .collect();
 
-    let generated_text = tokenizer.decode(&output_ids, true)?;
+    let generated_text = tokenizer.decode(&output_ids, true)
+        .map_err(|e| anyhow::anyhow!("Failed to decode output: {}", e))?;
     println!("{}", generated_text);
     println!("────────────────────────────────────────────────────");
     println!("\n✓ Generated {} tokens", output_ids.len());
