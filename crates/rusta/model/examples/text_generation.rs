@@ -1,9 +1,14 @@
 //! Text generation example for Strand-Rust-Coder-14B-v1
 //!
-//! This example demonstrates how to:
-//! 1. Load the tokenizer
-//! 2. Load the model weights
-//! 3. Generate text from a prompt
+//! This example demonstrates GPU-accelerated text generation using:
+//! 1. LibTorch backend with CUDA
+//! 2. Tokenizer for encoding/decoding
+//! 3. Autoregressive generation with KV-cache
+//!
+//! Prerequisites:
+//! - CUDA-capable GPU (16GB+ VRAM)
+//! - LibTorch installed (set LIBTORCH environment variable)
+//! - LIBTORCH_USE_PYTORCH=1 environment variable
 //!
 //! Usage:
 //! ```bash
@@ -15,10 +20,8 @@
 use burn::tensor::{backend::Backend, Int, Tensor};
 use rusta_model::{generate, load_model, Qwen2Config, Qwen2Tokenizer};
 
-// Choose your backend
-// For CPU: use burn::backend::NdArray;
-// For CUDA: use burn::backend::LibTorch;
-type MyBackend = burn::backend::NdArray<f32>;
+// Using LibTorch backend for CUDA GPU acceleration
+type MyBackend = burn_tch::LibTorch<f32>;
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
@@ -68,8 +71,10 @@ fn main() {
     println!("Max new tokens: {}", max_new_tokens);
     println!("Temperature: {}\n", temperature);
 
-    // Initialize device
-    let device = Default::default();
+    // Initialize CUDA device (GPU 0)
+    println!("Initializing CUDA device...");
+    let device = burn_tch::LibTorchDevice::Cuda(0);
+    println!("Using device: CUDA:0\n");
 
     // Load tokenizer
     println!("Loading tokenizer...");
@@ -129,7 +134,7 @@ fn main() {
 }
 
 fn print_help() {
-    println!("Strand-Rust-Coder-14B-v1 Text Generation");
+    println!("Strand-Rust-Coder-14B-v1 Text Generation (GPU/CUDA)");
     println!("\nUsage:");
     println!("  cargo run --example text_generation --release -- [OPTIONS]");
     println!("\nOptions:");
@@ -138,6 +143,10 @@ fn print_help() {
     println!("  --max-tokens <NUM>     Maximum tokens to generate (default: 100)");
     println!("  --temperature <NUM>    Sampling temperature (default: 0.7)");
     println!("  --help, -h             Show this help message");
+    println!("\nPrerequisites:");
+    println!("  - CUDA-capable GPU (16GB+ VRAM recommended)");
+    println!("  - LibTorch installed (set LIBTORCH environment variable)");
+    println!("  - LIBTORCH_USE_PYTORCH=1 environment variable");
     println!("\nExample:");
     println!(r#"  cargo run --example text_generation --release -- \"#);
     println!(r#"    --model-path "C:/Users/PC/.cache/huggingface/hub/models--Fortytwo-Network--Strand-Rust-Coder-14B-v1/snapshots/0b9a97c5ab89f9780c95356cc2ea121eb434372e" \"#);

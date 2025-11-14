@@ -13,13 +13,40 @@ C:\Users\PC\.cache\huggingface\hub\models--Fortytwo-Network--Strand-Rust-Coder-1
 
 ## 🏃 Quick Test Run
 
+### Prerequisites: LibTorch Installation
+
+**IMPORTANT**: This model uses CUDA GPU acceleration via LibTorch. You need to install LibTorch first:
+
+#### Windows:
+1. Download LibTorch from https://pytorch.org/get-started/locally/
+   - Select: PyTorch Build = Stable, Your OS = Windows, Package = LibTorch, Language = C++/Java, Compute Platform = CUDA 11.8 or 12.1
+2. Extract to `C:\libtorch` (or your preferred location)
+3. Set environment variable:
+   ```cmd
+   set LIBTORCH=C:\libtorch
+   set LIBTORCH_USE_PYTORCH=1
+   ```
+   Or add permanently via System Properties → Environment Variables
+
+#### Linux:
+```bash
+# Download LibTorch
+wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.1.0%2Bcu118.zip
+unzip libtorch-cxx11-abi-shared-with-deps-2.1.0+cu118.zip -d ~/
+
+# Set environment variable
+export LIBTORCH=~/libtorch
+export LIBTORCH_USE_PYTORCH=1
+export LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH
+```
+
 ### Option 1: Run the Example (Recommended)
 
 ```bash
 # Make sure you're in the project root
 cd /path/to/Rust-AI-programmer
 
-# Run the text generation example
+# Run the text generation example (uses CUDA GPU)
 cargo run --example text_generation --release -- \
     --model-path "C:\Users\PC\.cache\huggingface\hub\models--Fortytwo-Network--Strand-Rust-Coder-14B-v1\snapshots\0b9a97c5ab89f9780c95356cc2ea121eb434372e" \
     --prompt "fn fibonacci(n: u32) -> u32 {" \
@@ -81,13 +108,13 @@ The **first run will be slow** because:
 After compilation, only model loading takes time.
 
 ### Expected Speed
-- **CPU (NdArray backend)**: ~2-5 tokens/second
-- **GPU (LibTorch backend)**: ~20-50 tokens/second (requires CUDA setup)
+- **GPU (LibTorch/CUDA)**: ~20-80+ tokens/second (depends on your GPU)
+- This implementation uses CUDA by default for maximum performance
 
 ### Memory Requirements
-- **Minimum**: 16GB RAM (will be slow)
-- **Recommended**: 32GB+ RAM
-- **Ideal**: 24GB+ VRAM (GPU)
+- **GPU VRAM**: 16GB minimum, 24GB+ recommended
+- **System RAM**: 16GB+ recommended
+- The model will load into GPU memory for fastest inference
 
 ## 🎯 Example Output
 
@@ -143,41 +170,9 @@ huggingface-cli download Fortytwo-Network/Strand-Rust-Coder-14B-v1 --resume-down
 
 **Solutions**:
 1. Make sure you used `--release` flag
-2. Wait for first token (prompt processing is slow)
-3. Consider GPU backend (see Advanced Setup below)
-
-## 🚀 Advanced: GPU Acceleration
-
-For much faster inference, use the LibTorch backend with CUDA:
-
-### 1. Install CUDA and cuDNN
-Download from NVIDIA website (CUDA 11.8+ recommended)
-
-### 2. Install LibTorch
-Download from https://pytorch.org and set environment variable:
-```bash
-# Windows
-set LIBTORCH=C:\path\to\libtorch
-
-# Linux/Mac
-export LIBTORCH=/path/to/libtorch
-```
-
-### 3. Update Cargo.toml
-```toml
-[dependencies]
-burn = { version = "0.19.0", features = ["libtorch"] }
-```
-
-### 4. Change Backend in Example
-Edit `examples/text_generation.rs`:
-```rust
-// Change from:
-type MyBackend = burn::backend::NdArray<f32>;
-
-// To:
-type MyBackend = burn::backend::LibTorch<f32>;
-```
+2. Verify CUDA is working: `nvidia-smi` should show your GPU
+3. Check LibTorch environment variable is set correctly
+4. Wait for first token (prompt processing takes longer)
 
 ## 📚 Next Steps
 
