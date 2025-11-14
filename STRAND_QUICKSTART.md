@@ -13,40 +13,40 @@ C:\Users\PC\.cache\huggingface\hub\models--Fortytwo-Network--Strand-Rust-Coder-1
 
 ## 🏃 Quick Test Run
 
-### Prerequisites: LibTorch Installation
+### Prerequisites: CUDA Toolkit
 
-**IMPORTANT**: This model uses CUDA GPU acceleration via LibTorch. You need to install LibTorch first:
+**IMPORTANT**: This model uses native CUDA GPU acceleration via CubeCL (pure Rust!).
 
-#### Windows:
-1. Download LibTorch from https://pytorch.org/get-started/locally/
-   - Select: PyTorch Build = Stable, Your OS = Windows, Package = LibTorch, Language = C++/Java, Compute Platform = CUDA 11.8 or 12.1
-2. Extract to `C:\libtorch` (or your preferred location)
-3. Set environment variable:
-   ```cmd
-   set LIBTORCH=C:\libtorch
-   set LIBTORCH_USE_PYTORCH=1
-   ```
-   Or add permanently via System Properties → Environment Variables
+#### What You Need:
+- **CUDA-capable GPU** (NVIDIA, 16GB+ VRAM recommended)
+- **CUDA Toolkit** 11.8+ or 12.x
+- **That's it!** No LibTorch, no PyTorch - pure Rust 🦀
 
-#### Linux:
+#### Installing CUDA Toolkit:
+
+**Windows:**
+1. Download from: https://developer.nvidia.com/cuda-downloads
+2. Install CUDA Toolkit (includes nvcc compiler and libraries)
+3. Verify: `nvcc --version` should work
+
+**Linux:**
 ```bash
-# Download LibTorch
-wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.1.0%2Bcu118.zip
-unzip libtorch-cxx11-abi-shared-with-deps-2.1.0+cu118.zip -d ~/
+# Ubuntu/Debian
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install cuda-toolkit-12-3
 
-# Set environment variable
-export LIBTORCH=~/libtorch
-export LIBTORCH_USE_PYTORCH=1
-export LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH
+# Or check your distro's CUDA installation guide
 ```
 
-### Option 1: Run the Example (Recommended)
+### Run the Example
 
 ```bash
 # Make sure you're in the project root
 cd /path/to/Rust-AI-programmer
 
-# Run the text generation example (uses CUDA GPU)
+# Run the text generation example (native CUDA via CubeCL!)
 cargo run --example text_generation --release -- \
     --model-path "C:\Users\PC\.cache\huggingface\hub\models--Fortytwo-Network--Strand-Rust-Coder-14B-v1\snapshots\0b9a97c5ab89f9780c95356cc2ea121eb434372e" \
     --prompt "fn fibonacci(n: u32) -> u32 {" \
@@ -108,8 +108,9 @@ The **first run will be slow** because:
 After compilation, only model loading takes time.
 
 ### Expected Speed
-- **GPU (LibTorch/CUDA)**: ~20-80+ tokens/second (depends on your GPU)
-- This implementation uses CUDA by default for maximum performance
+- **GPU (Native CUDA/CubeCL)**: ~20-80+ tokens/second (depends on your GPU)
+- This implementation uses pure Rust CUDA via CubeCL - no LibTorch!
+- RTX 4090, RTX 3090, A100, etc. should all work great
 
 ### Memory Requirements
 - **GPU VRAM**: 16GB minimum, 24GB+ recommended
@@ -169,10 +170,11 @@ huggingface-cli download Fortytwo-Network/Strand-Rust-Coder-14B-v1 --resume-down
 **Problem**: Generating 1-2 tokens takes minutes
 
 **Solutions**:
-1. Make sure you used `--release` flag
+1. Make sure you used `--release` flag (CRITICAL for performance!)
 2. Verify CUDA is working: `nvidia-smi` should show your GPU
-3. Check LibTorch environment variable is set correctly
-4. Wait for first token (prompt processing takes longer)
+3. Check CUDA Toolkit is installed: `nvcc --version`
+4. Wait for first token (prompt processing takes longer than subsequent tokens)
+5. Make sure you're using the CUDA backend (should see "Using device: CUDA" in output)
 
 ## 📚 Next Steps
 

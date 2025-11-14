@@ -26,27 +26,28 @@ This crate provides a complete implementation of the **Strand-Rust-Coder-14B-v1*
 
 ## Prerequisites
 
-### LibTorch Installation (Required for GPU)
+### CUDA Toolkit (Required for GPU)
 
-This implementation uses LibTorch with CUDA for GPU acceleration. Install LibTorch before building:
+This implementation uses **native CUDA** via CubeCL - pure Rust, no LibTorch or PyTorch needed! 🦀
+
+**What You Need:**
+- NVIDIA GPU with CUDA support (16GB+ VRAM recommended)
+- CUDA Toolkit 11.8+ or 12.x
+
+**Installation:**
 
 **Windows:**
-1. Download LibTorch from https://pytorch.org/get-started/locally/
-   - Select: Stable, Windows, LibTorch, C++/Java, CUDA 11.8 or 12.1
-2. Extract to `C:\libtorch`
-3. Set environment variables:
-   ```cmd
-   set LIBTORCH=C:\libtorch
-   set LIBTORCH_USE_PYTORCH=1
-   ```
+1. Download from https://developer.nvidia.com/cuda-downloads
+2. Install CUDA Toolkit
+3. Verify: `nvcc --version`
 
 **Linux:**
 ```bash
-wget https://download.pytorch.org/libtorch/cu118/libtorch-cxx11-abi-shared-with-deps-2.1.0%2Bcu118.zip
-unzip libtorch-cxx11-abi-shared-with-deps-2.1.0+cu118.zip -d ~/
-export LIBTORCH=~/libtorch
-export LIBTORCH_USE_PYTORCH=1
-export LD_LIBRARY_PATH=${LIBTORCH}/lib:$LD_LIBRARY_PATH
+# Ubuntu/Debian example
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install cuda-toolkit-12-3
 ```
 
 ## Installation
@@ -105,12 +106,12 @@ cargo run --example text_generation --release -- \
 use burn::tensor::{backend::Backend, Int, Tensor};
 use rusta_model::{load_model, generate, Qwen2Config, Qwen2Tokenizer};
 
-// Using LibTorch backend with CUDA for GPU acceleration
-type MyBackend = burn_tch::LibTorch<f32>;
+// Using native CUDA backend via CubeCL (pure Rust!)
+type MyBackend = burn_cuda::Cuda<f32>;
 
 fn main() {
-    // Initialize CUDA device
-    let device = burn_tch::LibTorchDevice::Cuda(0);
+    // Initialize CUDA device (GPU 0)
+    let device = Default::default();
     let model_path = "/path/to/Strand-Rust-Coder-14B-v1";
 
     // Load tokenizer
@@ -150,16 +151,17 @@ fn main() {
 
 ### Backend Selection
 
-This implementation uses **LibTorch with CUDA** for GPU acceleration by default. This provides the best performance:
+This implementation uses **native CUDA via CubeCL** for GPU acceleration. Pure Rust, no LibTorch! 🦀
 
-- **GPU (LibTorch/CUDA)**: 20-80+ tokens/second (production ready)
+- **GPU (Native CUDA/CubeCL)**: 20-80+ tokens/second (production ready)
 - Requires: CUDA-capable GPU with 16GB+ VRAM
-- Requires: LibTorch installation (see Prerequisites above)
+- Requires: CUDA Toolkit 11.8+ or 12.x (see Prerequisites)
+- **No LibTorch or PyTorch** dependencies needed
 
 ### Memory Requirements
 
 The model requires approximately:
-- **GPU VRAM**: 16GB minimum, 24GB+ recommended (RTX 4090, A100, etc.)
+- **GPU VRAM**: 16GB minimum, 24GB+ recommended (RTX 4090, A100, RTX 3090, etc.)
 - **System RAM**: 16GB+
 - **FP32**: Full precision, ~28GB VRAM
 - Consider quantization for smaller GPUs (future feature)
