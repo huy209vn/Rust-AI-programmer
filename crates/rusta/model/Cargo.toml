@@ -17,3 +17,6 @@ burn-import = { version = "0.19.0", features = ["pytorch"] }
 
 # For converting PyTorch/safetensors weights
 safetensors = "0.4"
+
+# Tokenizer
+tokenizers = { version = "0.20", default-features = false, features = ["onig"] }

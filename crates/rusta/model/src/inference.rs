@@ -11,33 +11,64 @@ use burn_import::safetensors::{LoadArgs, SafetensorsFileRecorder};
 /// Load Qwen2 model from Safetensors weights
 ///
 /// # Arguments
-/// * `weights_path` - Path to the safetensors file (or directory with model.safetensors.index.json)
+/// * `model_dir` - Path to the directory containing model.safetensors.index.json and sharded weights
 /// * `device` - Device to load the model on
 ///
 /// # Returns
 /// The loaded model ready for inference
+///
+/// # Example
+/// ```no_run
+/// use burn::backend::NdArray;
+/// use rusta_model::inference::load_model;
+///
+/// let device = Default::default();
+/// let model = load_model::<NdArray>(
+///     "/path/to/Strand-Rust-Coder-14B-v1",
+///     &device
+/// ).unwrap();
+/// ```
 pub fn load_model<B: Backend>(
-    weights_path: &str,
+    model_dir: &str,
     device: &B::Device,
 ) -> Result<Qwen2ForCausalLM<B>, String> {
+    println!("Loading Strand-Rust-Coder-14B-v1 model...");
+
     // Initialize model configuration for Strand-Rust-Coder-14B
     let config = Qwen2Config::strand_rust_coder_14b();
 
     // Create model with random weights
     let mut model = config.init(device);
 
-    // Load weights from safetensors
-    let load_args = LoadArgs::new(weights_path.into())
-        // PyTorch models need transpose for linear layers
-        .with_debug_print(); // Enable debug printing to see key mapping
+    // Build path to model.safetensors.index.json for sharded models
+    let index_path = std::path::Path::new(model_dir).join("model.safetensors.index.json");
 
+    let load_args = if index_path.exists() {
+        println!("Found sharded model index: {:?}", index_path);
+        LoadArgs::new(index_path)
+    } else {
+        // Try single file
+        let single_path = std::path::Path::new(model_dir).join("model.safetensors");
+        if single_path.exists() {
+            println!("Found single model file: {:?}", single_path);
+            LoadArgs::new(single_path)
+        } else {
+            return Err(format!(
+                "Could not find model.safetensors.index.json or model.safetensors in {}",
+                model_dir
+            ));
+        }
+    };
+
+    println!("Loading weights from safetensors...");
     let record = SafetensorsFileRecorder::<FullPrecisionSettings>::default()
         .load(load_args, device)
         .map_err(|e| format!("Failed to load safetensors: {:?}", e))?;
 
-    // Load the weights into the model
+    println!("Applying weights to model...");
     model = model.load_record(record);
 
+    println!("Model loaded successfully!");
     Ok(model)
 }
 
