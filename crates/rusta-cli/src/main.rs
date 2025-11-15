@@ -125,8 +125,8 @@ fn generate_response<B: Backend>(
         .map_err(|e| anyhow::anyhow!("Failed to encode prompt: {}", e))?;
     println!("\n📝 Prompt tokens: {}", input_ids.len());
 
-    // Convert to tensor
-    let input_tensor: Tensor<B, 2, Int> = Tensor::from_ints(
+    // Convert to tensor [batch_size=1, seq_len]
+    let input_tensor: Tensor<B, 2, Int> = Tensor::<B, 1, Int>::from_ints(
         input_ids
             .iter()
             .map(|&id| id as i64)
