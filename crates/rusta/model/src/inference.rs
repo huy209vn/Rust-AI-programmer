@@ -40,25 +40,9 @@ pub fn load_model<B: Backend>(
     // Create model with random weights
     let mut model = config.init(device);
 
-    // Build path to model.safetensors.index.json for sharded models
-    let index_path = std::path::Path::new(model_dir).join("model.safetensors.index.json");
-
-    let load_args = if index_path.exists() {
-        println!("Found sharded model index: {:?}", index_path);
-        LoadArgs::new(index_path)
-    } else {
-        // Try single file
-        let single_path = std::path::Path::new(model_dir).join("model.safetensors");
-        if single_path.exists() {
-            println!("Found single model file: {:?}", single_path);
-            LoadArgs::new(single_path)
-        } else {
-            return Err(format!(
-                "Could not find model.safetensors.index.json or model.safetensors in {}",
-                model_dir
-            ));
-        }
-    };
+    // Try to load from directory - burn-import should handle sharded models
+    println!("Loading weights from: {}", model_dir);
+    let load_args = LoadArgs::new(model_dir.into());
 
     println!("Loading weights from safetensors...");
     let record = SafetensorsFileRecorder::<FullPrecisionSettings>::default()
