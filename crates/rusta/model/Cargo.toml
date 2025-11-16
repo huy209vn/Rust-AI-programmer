@@ -13,10 +13,9 @@ tracing.workspace = true
 
 # Burn deep learning framework
 burn = { version = "0.19.0", features = ["train", "std", "cuda"] }
-burn-import = { version = "0.19.0", features = ["pytorch"] }
 burn-cuda = { version = "0.19.0" }
 
-# For converting PyTorch/safetensors weights
+# For loading safetensors weights manually
 safetensors = "0.4"
 
 # Tokenizer
