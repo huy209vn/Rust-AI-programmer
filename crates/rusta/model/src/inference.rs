@@ -1,12 +1,7 @@
 //! Model inference and weight loading
 
 use crate::model::{Qwen2Config, Qwen2ForCausalLM, KeyValueCache};
-use burn::tensor::{backend::Backend, Data, Int, Shape, Tensor};
-use safetensors::SafeTensors;
-use std::collections::HashMap;
-use std::fs::File;
-use std::io::Read;
-use std::path::Path;
+use burn::tensor::{backend::Backend, Int, Tensor};
 
 /// Load Qwen2 model from Safetensors weights (handles sharded models)
 ///
