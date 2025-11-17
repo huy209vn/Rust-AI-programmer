@@ -43,20 +43,26 @@ impl<B: Backend> AutoregressiveCache<B> {
     /// # Returns
     /// Full cached tensor with shape [batch, num_heads, current_len + seq_len, head_dim]
     pub fn forward(&mut self, new_data: Tensor<B, 4>) -> Tensor<B, 4> {
-        let [_batch, _num_heads, new_seq_len, _head_dim] = new_data.dims();
+        let [batch_size, num_heads, new_seq_len, head_dim] = new_data.dims();
+        let [max_batch, max_heads, _max_seq, max_head_dim] = self.cache.dims();
 
         // Update the cache with new data
         let end_pos = self.current_len + new_seq_len;
         self.cache = self
             .cache
             .clone()
-            .slice_assign([0..1, 0..1, self.current_len..end_pos, 0..1], new_data.clone());
+            .slice_assign(
+                [0..batch_size, 0..num_heads, self.current_len..end_pos, 0..head_dim],
+                new_data.clone(),
+            );
 
         // Update current length
         self.current_len = end_pos;
 
         // Return the active portion of the cache
-        self.cache.clone().slice([0..1, 0..1, 0..end_pos, 0..1])
+        self.cache
+            .clone()
+            .slice([0..batch_size, 0..num_heads, 0..end_pos, 0..head_dim])
     }
 
     /// Get the current cached sequence length
