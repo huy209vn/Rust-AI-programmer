@@ -495,12 +495,16 @@ impl<B: Backend> Qwen2ForCausalLM<B> {
         device: &B::Device,
     ) -> Vec<KeyValueCache<B>> {
         let head_dim = config.hidden_size / config.num_attention_heads;
+        // Use a practical cache size (2K tokens) instead of max (32K)
+        // This avoids CubeCL's single buffer size limit (~1.5GB)
+        let practical_max_seq = 2048;
+
         (0..config.num_hidden_layers)
             .map(|_| {
                 KeyValueCache::new(
                     max_batch_size,
                     config.num_key_value_heads,
-                    config.max_position_embeddings,
+                    practical_max_seq,
                     head_dim,
                     device,
                 )
