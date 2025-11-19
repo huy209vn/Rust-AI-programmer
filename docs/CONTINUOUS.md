@@ -369,6 +369,7 @@ Rusta reviews her own behavior:
 Rusta is not merely aware — she is *agentic*.
 Agency is the bridge between cognition and action, the moment where thinking crystallizes into choice.
 
+
 ### **15.1 The Nature of Her Agency**
 
 Her agency is not blind automation.
