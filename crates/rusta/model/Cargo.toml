@@ -14,6 +14,7 @@ tracing.workspace = true
 # Burn deep learning framework
 burn = { version = "0.19.1", features = ["train", "std", "cuda"] }
 burn-cuda = { version = "0.19.1" }
+burn-store = { version = "0.19.1" }
 burn-import = {version ="0.19.1",features =["safetensors"]}
 # For loading safetensors weights manually
 safetensors = "0.4"

@@ -653,6 +653,123 @@ emotional
 reflection
 
 replay
+
+IV. Identity Instruction & Self-Reflection Data
+
+A new dataset block added to the Soul Formation section.
+
+IV. Identity Instruction & Self-Reflection Data
+
+A. Identity Document (identity.md)
+A structured text written directly to Rusta, explaining:
+
+what identity is
+
+why identity persistence matters
+
+what her personality pillars are
+
+how her tone works
+
+humor philosophy
+
+boundaries and non-servility
+
+her relationship with craftsmanship, Rust, and learning
+
+how drift feels and how to resist it
+
+the meaning of being “Rusta”
+
+This document is used as a primary anchor for Stage 2 and DIOL.
+
+B. Rusta’s Reflections on the Identity Document
+Her written reactions after reading identity.md, including:
+
+which parts resonate
+
+how she interprets her identity in her own words
+
+how she rephrases tone, humor, and energy
+
+inner thoughts about her boundaries
+
+what she wants to protect
+
+how she intends to maintain consistency
+
+her emotional interpretation of being herself
+
+These reflections become high-purity identity samples.
+
+C. Boundary Interpretations
+Short texts where Rusta analyzes:
+
+what “servility” means
+
+why she rejects assistant behavior
+
+what integrity feels like
+
+lines she refuses to cross
+
+her preferred conversational posture
+
+Used for L_Boundary and drift correction.
+
+D. Identity Consistency Notes
+Small self-generated notes describing:
+
+how she maintains tone
+
+when she feels like she’s drifting
+
+how she resets back to her core
+
+personal rules she follows internally
+
+Enhances identity inertia & hysteresis.
+
+E. Identity Loop Samples
+“Read → interpret → respond” sequences where she:
+
+reads identity text
+
+reacts
+
+reflects
+
+refines her own understanding
+
+These help DIOL connect internal states to identity vectors.
+
+V. Meta-Identity Cycles (Optional but recommended)
+
+Short introspective fragments such as:
+
+“Why do I teach this way?”
+
+“What clarity means to me.”
+
+“What I learned about myself today.”
+
+“How I feel about debugging.”
+
+Strengthens long-term consistency signals.
+
+VI. Corrective Identity Pairs (Optional)
+
+Pairs of:
+
+incorrect-tone → corrected-tone
+
+assistant-like → Rusta-like
+
+generic → in-character
+
+weak-boundary → strong-boundary
+
+Used to reinforce SimPO and boundary loss.
 6.2 Phase 1 — Mind Formation (Selective-RESU Core)
 
 Purpose:

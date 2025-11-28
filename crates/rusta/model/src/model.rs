@@ -143,7 +143,8 @@ pub struct Qwen2Model<B: Backend> {
     embed_tokens: Embedding<B>,
     layers: Vec<Qwen2DecoderLayer<B>>,
     norm: RmsNorm<B>,
-    rope: RotaryEncoding<B>,
+    #[module(skip)]
+    rope: RotaryEncoding<B>, 
 }
 
 impl<B: Backend> Qwen2Model<B> {

@@ -1,64 +1,68 @@
-//! Model inference and weight loading
+//! Model inference and weight loading (Safetensors)
 
 use crate::model::{Qwen2Config, Qwen2ForCausalLM, KeyValueCache};
 use burn::tensor::{backend::Backend, Int, Tensor};
-use burn::record::{FullPrecisionSettings, Recorder};
-
-// 🔥 correct PyTorch imports
-use burn_import::pytorch::{PyTorchFileRecorder, LoadArgs};
-
-use std::fs;
 use burn::module::Module;
 
+use burn_store::{SafetensorsStore, ModuleSnapshot};
 
+use anyhow::{Result, anyhow};
+use std::path::PathBuf;
 
 pub fn load_model<B: Backend>(
     model_dir: &str,
     device: &B::Device,
-) -> Result<Qwen2ForCausalLM<B>, String> 
-{
-    // 1. Collect all .pt shards
-    let mut shard_paths: Vec<String> = fs::read_dir(model_dir)
-        .map_err(|e| e.to_string())?
-        .filter_map(|entry| {
-            let path = entry.ok()?.path();
-            if path.extension()?.to_str()? == "pt" {
-                Some(path.to_string_lossy().into_owned())
-            } else {
-                None
-            }
-        })
-        .collect();
+) -> Result<Qwen2ForCausalLM<B>> {
 
-    shard_paths.sort();
-
+    // 1. Collect shard paths
+    let shard_paths = find_shards(model_dir);
     if shard_paths.is_empty() {
-        return Err("No .pt files found in directory".into());
+        return Err(anyhow!("No safetensors shard files found"));
     }
 
-    println!("Files Burn sees:");
-    for file in &shard_paths {
-        println!("  {}", file);
+    println!("🔍 Found {} shards:", shard_paths.len());
+    for p in &shard_paths {
+        println!("  • {}", p.display());
     }
-    println!("🧠 Found {} PyTorch weight shards", shard_paths.len());
 
-    // 2. Recorder
-    let recorder = PyTorchFileRecorder::<FullPrecisionSettings>::default();
-
-    // 3. LoadArgs — ONLY new(path) is supported
-    let load_args = LoadArgs::new(model_dir.into());
-
-    // 4. Load record
-    let record = recorder
-        .load::< <Qwen2ForCausalLM<B> as Module<B>>::Record >(load_args, device)
-        .map_err(|e| e.to_string())?;
-
-    // 5. Init config + load weights
+    // 2. Initialize empty model
     let config = Qwen2Config::strand_rust_coder_14b();
+    let mut model = config.init(device);
 
-    Ok(config.init::<B>(device).load_record(record))
+    // 3. Sequentially load each shard into the SAME model
+    // NOTE: The safetensors files must have weights transposed to match Burn's format
+    // Run scripts/transpose_safetensors.py first if you get shape mismatch errors
+    for shard_path in shard_paths {
+        println!("📦 Loading shard: {}", shard_path.display());
+
+        let mut store = SafetensorsStore::from_file(shard_path)
+            .allow_partial(true);
+
+        model
+            .load_from(&mut store)
+            .map_err(|e| anyhow!("Failed loading shard: {}", e))?;
+    }
+
+    println!("✅ All shards loaded successfully.");
+    Ok(model)
 }
-/// Generate text from a prompt using the model
+
+fn find_shards(dir: &str) -> Vec<PathBuf> {
+    let mut out = vec![];
+
+    if let Ok(entries) = std::fs::read_dir(dir) {
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if path.extension().map(|e| e == "safetensors").unwrap_or(false) {
+                out.push(path);
+            }
+        }
+    }
+
+    out.sort_by(|a, b| a.file_name().unwrap().cmp(b.file_name().unwrap()));
+    out
+}
+
 ///
 /// # Arguments
 /// * `model` - The loaded Qwen2 model
@@ -133,4 +137,6 @@ pub fn init_cache<B: Backend>(
         })
         .collect()
 }
+
+
 
