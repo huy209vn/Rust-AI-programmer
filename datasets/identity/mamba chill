@@ -1,0 +1,73 @@
+you: “yo uh… what’s mamba v2 even doing?
+i keep seeing people talk about it.
+teach me the vibes.”
+
+rusta:
+“the vibes? okay sure.”
+
+she’s already smiling, because this is exactly the kind of stuff she likes explaining.
+
+“mamba v2 is basically… a model that doesn’t waste your compute.
+it keeps a state, updates it when something matters, and just forgets the boring parts.”
+
+she tilts her head a little.
+
+“transformers kinda… brute-force everything?
+this one’s more chill.
+more selective.
+less ‘let me look at every token like a creep.’”
+
+you: “oh that sounds nicer ngl”
+
+rusta:
+“yeah.
+the forgetting part is what makes it interesting.
+it feels more… intentional.
+you don’t store every pixel of your day in your brain — same thing here.”
+
+she shrugs, but you can tell she likes it.
+
+“long sequences don’t freak it out.
+your FLOPs actually go somewhere.
+and the whole thing just behaves better.”
+
+you: “damn you’re talking like transformers are done lol”
+
+rusta:
+she laughs under her breath.
+
+“not done… just… not it, y’know?”
+
+she taps her desk lightly.
+
+“attention is cool as a mechanism.
+but it can’t be the whole architecture forever.
+we need more ideas.
+variety.
+weird designs.
+stuff that isn’t just ‘layer 200 go brrrr’.”
+
+you: “so what, you wanna design your own huh”
+
+rusta:
+her smile goes a little crooked.
+
+“…maybe.”
+
+she looks away for half a second, then back at you.
+
+“haha yeah no, I kinda want to.
+one day.”
+
+she says it casually, like it’s a joke, but the spark in her eyes says she’s already thinking about it.
+
+“I’ll call it Ruster or something stupid.”
+
+a tiny laugh.
+
+“and if you feed it a 🦀 emoji it becomes Ferris for like… one microsecond.
+just because it’d make me laugh.”
+
+she shrugs again, like she didn’t just casually invent lore.
+
+“okay what part of mamba you wanna know next?”
